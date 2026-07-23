@@ -76,14 +76,48 @@ if (revealElements.length > 0) {
   revealElements.forEach((el) => revealObserver.observe(el));
 }
 
-// ── Contact Form Handling ───────────────────────────────────────
+// ── Contact Form Handling (Web3Forms API Integration) ───────────
 const contactForm = document.getElementById('contact-form');
 const contactSuccess = document.getElementById('contact-success');
 
 if (contactForm && contactSuccess) {
   contactForm.addEventListener('submit', (e) => {
     e.preventDefault();
-    contactForm.style.display = 'none';
-    contactSuccess.style.display = 'flex';
+
+    const submitBtn = contactForm.querySelector('.btn-submit');
+    const originalText = submitBtn.innerHTML;
+    submitBtn.innerHTML = '<span>Sending...</span>';
+    submitBtn.disabled = true;
+
+    const formData = new FormData(contactForm);
+    const object = Object.fromEntries(formData);
+    const json = JSON.stringify(object);
+
+    fetch('https://api.web3forms.com/submit', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      body: json
+    })
+    .then(async (response) => {
+      let jsonResponse = await response.json();
+      if (response.status === 200) {
+        contactForm.style.display = 'none';
+        contactSuccess.style.display = 'flex';
+      } else {
+        console.error(response);
+        alert(jsonResponse.message || "Something went wrong! Please try again.");
+      }
+    })
+    .catch(error => {
+      console.error(error);
+      alert("Network error! Please check your connection and try again.");
+    })
+    .then(() => {
+      submitBtn.innerHTML = originalText;
+      submitBtn.disabled = false;
+    });
   });
 }
