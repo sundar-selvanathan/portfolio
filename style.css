@@ -586,8 +586,8 @@ img {
 
 .timeline-line {
   position: absolute;
-  left: 19px;
-  top: 1.5rem;
+  left: 20px; /* center of the 40px column */
+  top: 0.8rem; /* aligned with the center of the first dot */
   bottom: 0;
   width: 1px;
   background: var(--border-color);
@@ -596,18 +596,19 @@ img {
 .timeline-entry {
   position: relative;
   display: flex;
-  gap: 1.5rem;
+  gap: 1rem;
   padding-bottom: 2.5rem;
 }
 
 /* Timeline dot */
 .timeline-dot-col {
+  width: 40px; /* fixed width to align with left: 20px line */
   position: relative;
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding-top: 0.25rem;
+  padding-top: 0.5rem;
 }
 
 .timeline-dot {
@@ -1188,9 +1189,9 @@ img {
 
 /* Company logo integration in career timeline */
 .company-logo {
-  height: 16px;
+  height: 24px;
   width: auto;
-  max-height: 20px;
+  max-height: 28px;
   display: inline-block;
   vertical-align: middle;
 }
