@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Freshdesk mobile feedback redesign case study by Sundar Raj S, Lead Product Designer.">
+  <title>Freshdesk Mobile Feedback Case Study — Sundar Raj S</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav class="navbar">
+    <div class="container nav-container">
+      <a href="index.html" class="logo">SUNDAR RAJ <span class="logo-sub">S</span></a>
+      <div class="nav-links" id="nav-links">
+        <a href="index.html" class="nav-link">About</a>
+        <a href="projects.html" class="nav-link active">Projects</a>
+        <a href="resume.html" class="nav-link">Resume</a>
+        <a href="contact.html" class="nav-link">Contact</a>
+      </div>
+      <button id="menu-btn" class="menu-toggle-btn" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="nav-links">
+        <span class="menu-bar"></span>
+        <span class="menu-bar"></span>
+        <span class="menu-bar"></span>
+      </button>
+    </div>
+  </nav>
+
+  <main>
+    <section class="case-study-page-section">
+      <div class="container">
+        
+        <!-- Back button -->
+        <a href="projects.html" class="case-study-back-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+          </svg>
+          Back to Projects
+        </a>
+
+        <!-- Hero Section -->
+        <div class="case-study-hero">
+          <h1 class="case-study-title">How redesigning feedback improved Freshdesk from 1.2★ to 4.5★</h1>
+          <p class="case-study-subtitle">Redesigned Freshdesk's mobile feedback and review experience to improve App Store ratings, create a transparent review flow, and establish a scalable feedback system that enabled the product team to learn directly from users.</p>
+          
+          <!-- Metadata Table -->
+          <div class="case-study-meta-grid">
+            <div class="meta-item">
+              <span class="meta-label">Product / Scope</span>
+              <span class="meta-value">Freshworks (Freshdesk Mobile)<br>Android & iOS</span>
+            </div>
+            <div class="meta-item">
+              <span class="meta-label">Timeline</span>
+              <span class="meta-value">Q2 2019<br>Duration: 2 Months</span>
+            </div>
+            <div class="meta-item">
+              <span class="meta-label">Skills Utilized</span>
+              <span class="meta-value">UX Strategy, Mobile Design, Prototyping, Visual Design</span>
+            </div>
+            <div class="meta-item">
+              <span class="meta-label">Key Impact</span>
+              <span class="meta-value">1.2★ → 4.5★ App Store rating<br>Standardized feedback loop</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Case Study Content -->
+        <div class="case-study-content">
+          
+          <!-- Hero Mockup Display -->
+          <div class="case-study-full-image" style="margin-top: 0; margin-bottom: 5rem;">
+            <img src="assets/images/case-study/freshdesk_image_1.jpeg" alt="Freshdesk mobile rating screens progression" class="reveal">
+          </div>
+
+          <!-- Section 1: Introduction -->
+          <div class="case-study-section reveal">
+            <h2 class="case-study-section-title">The Problem</h2>
+            <p>Despite being used daily by customer support teams, the app held a <strong>1.2★ rating</strong> across the App Store and Play Store. The obvious solution was to ask more users for reviews. The better solution was to redesign how we listened to them.</p>
+          </div>
+
+          <!-- Section 2: Why it Mattered -->
+          <div class="case-study-section reveal">
+            <h2 class="case-study-section-title">Why this mattered</h2>
+            <p>App store ratings influence whether people download an app before they ever experience it. Low ratings affected user confidence, but another problem existed internally.</p>
+            <p>Mobile feedback was mixed with general support tickets, making it difficult for designers and product managers to identify recurring issues and prioritize improvements. The challenge wasn't just increasing ratings. <strong>It was building a better feedback loop between users and the product team.</strong></p>
+          </div>
+
+          <!-- Section 3: Obvious Solution (Side by side) -->
+          <div class="case-study-grid-2col reveal">
+            <div class="grid-text-col">
+              <h2 class="case-study-section-title">The obvious solution wasn't the right one</h2>
+              <p>The first version was simple: five stars sent you straight to the App Store, anything less opened a feedback form. It would have worked—ratings would've gone up.</p>
+              <p>But users weren't choosing to rate us; they were being routed there without knowing it. I brought this to our Product Manager as a <strong>dark pattern</strong>, not a growth tactic, and made the case that we'd be trading a real metric today for a trust problem later. We agreed to slow down and try something more honest, even though it meant giving up the fast path to a rating bump.</p>
+            </div>
+            <div class="grid-image-col">
+              <img src="assets/images/case-study/freshdesk_image_4.png" alt="First iteration screen layout showing feedback rating redirection">
+            </div>
+          </div>
+
+          <!-- Section 4: Transparency (Side by side reverse) -->
+          <div class="case-study-grid-2col reverse reveal">
+            <div class="grid-text-col">
+              <h2 class="case-study-section-title">Transparency solved one problem, but created another</h2>
+              <p>Our next iteration separated the actions into two clear choices: <strong>Rate Us</strong> or <strong>Give Feedback</strong>. The experience became honest and aligned with user expectations, but engagement remained lower than expected.</p>
+              <p>Users now understood their choices, yet we were still asking for reviews without considering whether they had actually experienced enough value. The problem wasn't the interface. <strong>It was the timing.</strong></p>
+            </div>
+            <div class="grid-image-col">
+              <img src="assets/images/case-study/freshdesk_image_5.png" alt="Second iteration split choice feedback UI">
+            </div>
+          </div>
+
+          <!-- Section 5: The Solution (Detailed Paragraphs + Full Screen mockups) -->
+          <div class="case-study-section reveal">
+            <h2 class="case-study-section-title">We were asking at the wrong moment</h2>
+            <p>Instead of asking everyone for a review, I focused on identifying when users were most likely to feel successful. The review prompt appeared <strong>only after users had resolved five tickets</strong> or had actively used the app for ten days.</p>
+            <p>Rather than sending users directly to the store, we asked a simple question: <strong>"Love Freshdesk? You've resolved a few tickets using the app. Is it worth a 5-star rating?"</strong></p>
+            <p>Users who selected <strong>No</strong> were immediately given an opportunity to explain their experience through an in-app feedback form, while users who selected <strong>Yes</strong> were taken directly to the platform's native review flow.</p>
+            <p>This balanced business goals with user trust while respecting Apple's and Google's limitations on how frequently native review prompts could appear.</p>
+          </div>
+
+          <div class="case-study-full-image reveal">
+            <img src="assets/images/case-study/freshdesk_image_6.png" alt="Final value-triggered mobile rating experience flow">
+          </div>
+
+          <!-- Section 6: Direct Feedback System -->
+          <div class="case-study-grid-2col reveal">
+            <div class="grid-text-col">
+              <h2 class="case-study-section-title">Ratings weren't our only blind spot</h2>
+              <p>While redesigning the review experience, we uncovered another opportunity. Feedback submitted from mobile devices wasn't distinguishable from other support requests.</p>
+              <p>To solve this, every submission created through <em>Give Feedback</em> automatically generated a support ticket tagged <strong>Mobile</strong>, with optional screenshot attachments. This gave product managers and designers direct visibility into mobile-specific issues without relying solely on support summaries. Instead of simply increasing ratings, we created a continuous feedback system that improved how the team learned from users.</p>
+            </div>
+            <div class="grid-image-col">
+              <img src="assets/images/case-study/freshdesk_image_12.jpeg" alt="Screenshot of customer ticket creation with Mobile tag">
+            </div>
+          </div>
+
+          <!-- Section 7: Impact metrics -->
+          <div class="case-study-section reveal">
+            <h2 class="case-study-section-title">Three months later...</h2>
+            <p>The redesign delivered more than better ratings. Freshdesk's mobile app improved from <strong>1.2★ to 4.5★</strong> across the App Store and Play Store within three months.</p>
+            
+            <p>Beyond the public rating, the redesign also:</p>
+            <ul style="color: var(--text-muted); line-height: 1.8; margin-left: 1.5rem; margin-bottom: 2rem; font-size: 1rem;">
+              <li style="margin-bottom: 0.5rem;"><strong style="color: var(--text-primary);">Increased review submissions</strong> by prompting users after successful experiences.</li>
+              <li style="margin-bottom: 0.5rem;"><strong style="color: var(--text-primary);">Created a dedicated feedback channel</strong> with screenshot support.</li>
+              <li style="margin-bottom: 0.5rem;"><strong style="color: var(--text-primary);">Improved issue prioritization</strong> through automatically tagged <em>Mobile</em> support tickets.</li>
+              <li style="margin-bottom: 0.5rem;"><strong style="color: var(--text-primary);">Direct monitoring</strong> allowing product managers and designers to monitor customer feedback directly.</li>
+              <li style="margin-bottom: 0.5rem;"><strong style="color: var(--text-primary);">Established a reusable pattern</strong> that was later adopted by Freshchat and Freshcaller.</li>
+            </ul>
+          </div>
+
+          <div class="case-study-full-image reveal">
+            <img src="assets/images/case-study/freshdesk_image_2.jpeg" alt="Freshdesk 4.5 star rating marketplace listing screenshot">
+          </div>
+
+          <!-- Quote / Reflection -->
+          <div class="case-study-section reveal">
+            <h2 class="case-study-section-title">Reflection</h2>
+            <p>I began this project thinking the challenge was improving App Store ratings. Through multiple iterations, stakeholder discussions, and conversations with our support team, I realized the real challenge was building a feedback experience users could trust.</p>
+            <p>When users feel heard, they're far more willing to advocate for your product. That shift in thinking changed how I approach growth features today.</p>
+            
+            <blockquote class="case-study-quote">
+              “Good product design doesn't optimize for better metrics first. It earns better metrics by creating better user experiences.”
+            </blockquote>
+          </div>
+
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="main-footer">
+    <div class="container footer-container">
+      <p>&copy; 2026 Sundar Raj S</p>
+      <div class="social-links">
+        <a href="mailto:sundar.selvanathan@gmail.com" aria-label="Email">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect width="20" height="16" x="2" y="4" rx="2"></rect>
+            <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
+          </svg>
+        </a>
+        <a href="https://linkedin.com/in/sundarrajs" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
+            <rect width="4" height="12" x="2" y="9"></rect>
+            <circle cx="4" cy="4" r="2"></circle>
+          </svg>
+        </a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
