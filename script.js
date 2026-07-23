@@ -6,6 +6,7 @@
 const header = document.getElementById('main-header');
 
 function onScroll() {
+  if (!header) return;
   if (window.scrollY > 40) {
     header.classList.add('scrolled');
   } else {
@@ -14,7 +15,9 @@ function onScroll() {
 }
 
 window.addEventListener('scroll', onScroll, { passive: true });
-onScroll(); // initial check
+if (header) {
+  onScroll(); // initial check
+}
 
 // ── Mobile Menu Toggle ──────────────────────────────────────────
 const menuBtn = document.getElementById('menu-btn');
