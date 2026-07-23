@@ -1186,6 +1186,20 @@ img {
   }
 }
 
+/* Company logo integration in career timeline */
+.company-logo {
+  height: 16px;
+  width: auto;
+  max-height: 20px;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+img.company-logo {
+  opacity: 1;
+}
+}
+
 @media (min-width: 769px) {
   .all-projects-link-mobile {
     display: none;
