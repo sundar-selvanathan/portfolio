@@ -1,0 +1,1640 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Job Search Command Center | Sundar Raj S</title>
+  <meta name="description" content="Personal job search dashboard with in-app search across career pages, LinkedIn, Indeed & more.">
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="icon" type="image/png" href="../assets/images/favicon.png">
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Sans:wght@300;400;500;600&display=swap');
+
+    :root {
+      --font-serif: 'Playfair Display', Georgia, serif;
+      --font-sans: 'DM Sans', system-ui, -apple-system, sans-serif;
+      --bg-primary: #111111;
+      --bg-secondary: #1a1a1a;
+      --bg-card: #1b1b1b;
+      --bg-elevated: #222222;
+      --bg-hover: #282828;
+      --text-primary: #f0f0ee;
+      --text-secondary: #c8c8c4;
+      --text-muted: #a2a29e;
+      --border-color: rgba(240, 240, 238, 0.09);
+      --border-hover: rgba(200, 200, 196, 0.25);
+      --max-width: 1280px;
+      --header-height: 56px;
+      --transition-smooth: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      --col-wishlist: #6366f1;
+      --col-applied: #f59e0b;
+      --col-interview: #3b82f6;
+      --col-offer: #10b981;
+      --col-rejected: #ef4444;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; font-size: 16px; }
+
+    body {
+      font-family: var(--font-sans); font-weight: 400;
+      background: var(--bg-primary); color: var(--text-primary);
+      line-height: 1.6; overflow-x: hidden; min-height: 100vh;
+    }
+
+    a { color: inherit; text-decoration: none; transition: var(--transition-smooth); }
+    ul { list-style: none; }
+    button { font-family: inherit; cursor: pointer; }
+    input, select, textarea { font-family: inherit; }
+
+    /* Header */
+    #main-header {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+      height: var(--header-height);
+      background: rgba(17, 17, 17, 0.96);
+      backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+      border-bottom: 1px solid var(--border-color);
+    }
+    .nav-container {
+      max-width: var(--max-width); margin: 0 auto;
+      padding: 0 2rem; height: 100%;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .nav-logo { font-weight: 400; font-size: 1.125rem; color: var(--text-primary); letter-spacing: 0.02em; }
+    .nav-logo:hover { color: var(--text-secondary); }
+    .nav-right { display: flex; align-items: center; gap: 1rem; }
+    .nav-back {
+      font-size: 0.8125rem; color: var(--text-muted);
+      display: flex; align-items: center; gap: 0.375rem;
+    }
+    .nav-back:hover { color: var(--text-primary); }
+    .nav-back svg { width: 14px; height: 14px; }
+    .btn-icon {
+      background: transparent; border: 1px solid var(--border-color);
+      color: var(--text-muted); width: 34px; height: 34px;
+      display: flex; align-items: center; justify-content: center;
+      transition: all 0.2s; padding: 0;
+    }
+    .btn-icon:hover { color: var(--text-primary); border-color: var(--border-hover); }
+    .btn-icon svg { width: 16px; height: 16px; }
+
+    /* Layout */
+    .container { max-width: var(--max-width); margin: 0 auto; padding: 0 2rem; width: 100%; }
+    main { padding-top: calc(var(--header-height) + 2.5rem); padding-bottom: 4rem; }
+
+    /* Tabs */
+    .tab-bar {
+      display: flex; gap: 0; margin-bottom: 2rem;
+      border-bottom: 1px solid var(--border-color);
+    }
+    .tab-btn {
+      background: transparent; border: none; border-bottom: 2px solid transparent;
+      color: var(--text-muted); font-size: 0.875rem; font-weight: 500;
+      padding: 0.875rem 1.5rem; letter-spacing: 0.02em;
+      transition: all 0.2s; position: relative; bottom: -1px;
+    }
+    .tab-btn:hover { color: var(--text-secondary); }
+    .tab-btn.active { color: var(--text-primary); border-bottom-color: var(--text-primary); }
+    .tab-badge {
+      font-size: 0.625rem; background: var(--bg-elevated);
+      padding: 0.0625rem 0.4375rem; margin-left: 0.5rem;
+      color: var(--text-muted); border-radius: 2px;
+    }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    /* Search header */
+    .search-panel-header { margin-bottom: 1.5rem; }
+    .search-panel-header h1 {
+      font-family: var(--font-serif);
+      font-size: clamp(1.75rem, 3vw, 2.25rem); font-weight: 400; margin-bottom: 0.25rem;
+    }
+    .search-panel-header p { color: var(--text-muted); font-size: 0.875rem; }
+
+    /* Search form */
+    .search-form {
+      background: var(--bg-secondary); border: 1px solid var(--border-color);
+      padding: 1.5rem; margin-bottom: 1.5rem;
+    }
+    .search-row { display: flex; gap: 0.75rem; margin-bottom: 1rem; }
+    .search-field { flex: 1; position: relative; }
+    .search-field svg.fi {
+      position: absolute; left: 0.875rem; top: 50%;
+      transform: translateY(-50%); width: 16px; height: 16px;
+      color: var(--text-muted); pointer-events: none;
+    }
+    .search-field input {
+      width: 100%; background: var(--bg-primary);
+      border: 1px solid var(--border-color);
+      color: var(--text-primary); font-size: 0.875rem;
+      padding: 0.6875rem 1rem 0.6875rem 2.5rem; outline: none;
+      transition: border-color 0.2s;
+    }
+    .search-field input::placeholder { color: var(--text-muted); opacity: 0.5; }
+    .search-field input:focus { border-color: var(--border-hover); }
+    .loc-field { max-width: 200px; }
+    .btn-search {
+      background: var(--text-primary); color: var(--bg-primary);
+      border: none; padding: 0 1.75rem;
+      font-size: 0.875rem; font-weight: 500; letter-spacing: 0.02em;
+      white-space: nowrap; transition: opacity 0.2s;
+    }
+    .btn-search:hover { opacity: 0.85; }
+
+    /* Filters */
+    .filter-row { display: flex; gap: 0.75rem; flex-wrap: wrap; align-items: center; }
+    .fg { display: flex; align-items: center; gap: 0.375rem; }
+    .fl { font-size: 0.6875rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-muted); }
+    .fs {
+      background: var(--bg-primary); border: 1px solid var(--border-color);
+      color: var(--text-secondary); font-size: 0.8125rem;
+      padding: 0.375rem 2rem 0.375rem 0.625rem; outline: none;
+      transition: border-color 0.2s; appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%23a2a29e' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat; background-position: right 0.5rem center;
+    }
+    .fs:focus { border-color: var(--border-hover); }
+    .fs option { background: var(--bg-primary); color: var(--text-primary); }
+    .fdiv { width: 1px; height: 20px; background: var(--border-color); margin: 0 0.25rem; }
+
+    /* Source chips */
+    .source-chips { display: flex; gap: 0.375rem; flex-wrap: wrap; }
+    .src-chip {
+      background: transparent; border: 1px solid var(--border-color);
+      color: var(--text-muted); font-size: 0.6875rem;
+      padding: 0.3125rem 0.75rem; letter-spacing: 0.04em;
+      transition: all 0.2s; display: flex; align-items: center; gap: 0.375rem;
+    }
+    .src-chip:hover { border-color: var(--border-hover); color: var(--text-secondary); }
+    .src-chip.active { background: var(--bg-elevated); color: var(--text-primary); border-color: var(--border-hover); }
+    .src-dot { width: 5px; height: 5px; border-radius: 50%; }
+    .src-hint { font-size: 0.5625rem; color: var(--text-muted); opacity: 0.6; margin-left: 0.125rem; }
+
+    /* Results */
+    .results-header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 1rem; flex-wrap: wrap; gap: 0.5rem;
+    }
+    .results-count { font-size: 0.8125rem; color: var(--text-muted); }
+    .results-sources {
+      display: flex; gap: 0.375rem; flex-wrap: wrap;
+    }
+    .result-src-tag {
+      font-size: 0.5625rem; padding: 0.125rem 0.4375rem;
+      border: 1px solid var(--border-color); color: var(--text-muted);
+      letter-spacing: 0.1em; text-transform: uppercase;
+    }
+
+    /* Job card */
+    .job-listings { display: flex; flex-direction: column; gap: 0.75rem; }
+    .jl {
+      background: var(--bg-secondary); border: 1px solid var(--border-color);
+      padding: 1.25rem 1.5rem; display: flex; gap: 1.25rem;
+      transition: border-color 0.2s; position: relative;
+    }
+    .jl:hover { border-color: var(--border-hover); }
+    .jl.saved { border-left: 3px solid var(--col-wishlist); }
+    .jl-logo {
+      width: 48px; height: 48px; flex-shrink: 0;
+      background: var(--bg-elevated); border: 1px solid var(--border-color);
+      display: flex; align-items: center; justify-content: center;
+      overflow: hidden; border-radius: 4px;
+    }
+    .jl-logo img { width: 100%; height: 100%; object-fit: contain; }
+    .jl-logo-fb { font-size: 0.875rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; }
+    .jl-body { flex: 1; min-width: 0; }
+    .jl-title { font-size: 1rem; font-weight: 500; color: var(--text-primary); line-height: 1.4; margin-bottom: 0.25rem; }
+    .jl-company { font-size: 0.8125rem; color: var(--text-secondary); margin-bottom: 0.5rem; }
+    .jl-details { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 0.625rem; }
+    .dc {
+      font-size: 0.6875rem; padding: 0.1875rem 0.5rem;
+      background: var(--bg-elevated); color: var(--text-muted);
+      display: inline-flex; align-items: center; gap: 0.25rem; letter-spacing: 0.02em;
+    }
+    .dc svg { width: 11px; height: 11px; }
+    .jl-desc {
+      font-size: 0.8125rem; color: var(--text-muted); line-height: 1.6;
+      max-height: 3.2em; overflow: hidden; margin-bottom: 0.75rem;
+      display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+    }
+    .jl-footer { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+    .jl-meta { display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; }
+    .jl-src {
+      font-size: 0.5625rem; padding: 0.125rem 0.4375rem;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      border: 1px solid; opacity: 0.7;
+    }
+    .jl-time { font-size: 0.6875rem; color: rgba(162, 162, 158, 0.5); }
+    .jl-actions { display: flex; gap: 0.5rem; flex-shrink: 0; }
+    .btn-save {
+      background: transparent; border: 1px solid var(--border-color);
+      color: var(--text-secondary); font-size: 0.75rem;
+      padding: 0.375rem 0.875rem; letter-spacing: 0.02em;
+      transition: all 0.2s; display: flex; align-items: center; gap: 0.375rem;
+    }
+    .btn-save:hover { border-color: var(--col-wishlist); color: var(--col-wishlist); }
+    .btn-save.saved { background: rgba(99, 102, 241, 0.1); border-color: var(--col-wishlist); color: var(--col-wishlist); }
+    .btn-save svg { width: 12px; height: 12px; }
+    .btn-apply {
+      background: var(--text-primary); color: var(--bg-primary);
+      border: none; font-size: 0.75rem; font-weight: 500;
+      padding: 0.375rem 1rem; letter-spacing: 0.02em;
+      transition: opacity 0.2s; display: flex; align-items: center; gap: 0.375rem;
+    }
+    .btn-apply:hover { opacity: 0.85; }
+    .btn-apply.applied { background: var(--col-applied); color: #000; }
+    .btn-apply svg { width: 12px; height: 12px; }
+
+    /* Loading skeletons */
+    .skel { background: var(--bg-secondary); border: 1px solid var(--border-color); padding: 1.25rem 1.5rem; display: flex; gap: 1.25rem; }
+    .skel-logo { width: 48px; height: 48px; background: var(--bg-elevated); border-radius: 4px; animation: pulse 1.5s infinite; }
+    .skel-body { flex: 1; }
+    .skel-line { height: 12px; background: var(--bg-elevated); margin-bottom: 0.75rem; border-radius: 2px; animation: pulse 1.5s infinite; }
+    .skel-line.w6 { width: 60%; } .skel-line.w4 { width: 40%; } .skel-line.w8 { width: 80%; } .skel-line.w10 { width: 100%; }
+    @keyframes pulse { 0%, 100% { opacity: 0.4; } 50% { opacity: 0.8; } }
+
+    /* Empty/error states */
+    .search-state { text-align: center; padding: 4rem 2rem; }
+    .search-state-icon { font-size: 2.5rem; margin-bottom: 1rem; opacity: 0.4; }
+    .search-state h3 { font-family: var(--font-serif); font-size: 1.25rem; font-weight: 400; margin-bottom: 0.375rem; }
+    .search-state p { font-size: 0.8125rem; color: var(--text-muted); max-width: 28rem; margin: 0 auto; line-height: 1.7; }
+
+    /* Pagination */
+    .pagination { display: flex; align-items: center; justify-content: center; gap: 0.5rem; margin-top: 1.5rem; }
+    .btn-page {
+      background: transparent; border: 1px solid var(--border-color);
+      color: var(--text-muted); font-size: 0.8125rem;
+      padding: 0.5rem 1rem; transition: all 0.2s;
+      display: flex; align-items: center; gap: 0.375rem;
+    }
+    .btn-page:hover { border-color: var(--border-hover); color: var(--text-primary); }
+    .btn-page:disabled { opacity: 0.3; cursor: not-allowed; }
+    .btn-page svg { width: 14px; height: 14px; }
+    .page-info { font-size: 0.75rem; color: var(--text-muted); padding: 0 0.5rem; }
+
+    /* Tracker panel */
+    .tracker-header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 1.5rem;
+    }
+    .tracker-header h2 { font-family: var(--font-serif); font-size: 1.5rem; font-weight: 400; }
+    .tracker-actions { display: flex; gap: 0.5rem; }
+    .btn-ta {
+      background: transparent; border: 1px solid var(--border-color);
+      color: var(--text-muted); font-size: 0.75rem;
+      padding: 0.4375rem 1rem; letter-spacing: 0.02em;
+      transition: all 0.2s; display: inline-flex; align-items: center; gap: 0.375rem;
+    }
+    .btn-ta:hover { color: var(--text-primary); border-color: var(--border-hover); }
+    .btn-ta svg { width: 12px; height: 12px; }
+    .btn-ta.primary { background: var(--text-primary); color: var(--bg-primary); border-color: var(--text-primary); }
+    .btn-ta.primary:hover { opacity: 0.85; }
+
+    /* Stats strip */
+    .stats-strip {
+      display: grid; grid-template-columns: repeat(5, 1fr);
+      gap: 1px; background: var(--border-color);
+      border: 1px solid var(--border-color); margin-bottom: 1.5rem;
+    }
+    .sc { background: var(--bg-secondary); padding: 1rem; text-align: center; }
+    .sc .sn { font-family: var(--font-serif); font-size: 1.5rem; font-weight: 400; color: var(--text-primary); display: block; }
+    .sc .sl { font-size: 0.625rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-muted); margin-top: 0.125rem; display: block; }
+    .sc .sb { display: block; width: 20px; height: 2px; margin: 0.375rem auto 0; border-radius: 1px; }
+
+    /* Kanban */
+    .kanban-board { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.75rem; min-height: 350px; }
+    .kanban-col {
+      background: var(--bg-secondary); border: 1px solid var(--border-color);
+      display: flex; flex-direction: column; min-height: 350px; transition: all 0.2s;
+    }
+    .kanban-col.drag-over { border-color: var(--border-hover); background: rgba(34, 34, 34, 0.8); }
+    .kc-header { padding: 0.875rem 0.875rem 0.625rem; border-bottom: 1px solid var(--border-color); display: flex; align-items: center; gap: 0.5rem; }
+    .kc-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+    .kc-name { font-size: 0.6875rem; font-weight: 500; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text-secondary); }
+    .kc-count { font-size: 0.625rem; color: var(--text-muted); margin-left: auto; background: var(--bg-primary); padding: 0.0625rem 0.375rem; border-radius: 2px; }
+    .kc-cards { flex: 1; padding: 0.625rem; overflow-y: auto; display: flex; flex-direction: column; gap: 0.5rem; }
+    .kc-cards:empty::after { content: 'Drop here'; display: flex; align-items: center; justify-content: center; height: 100%; font-size: 0.6875rem; color: var(--text-muted); opacity: 0.3; letter-spacing: 0.1em; }
+
+    /* Tracker cards */
+    .tc {
+      background: var(--bg-card); border: 1px solid var(--border-color);
+      padding: 0.875rem; cursor: grab; transition: all 0.2s; position: relative;
+    }
+    .tc:active { cursor: grabbing; }
+    .tc:hover { border-color: var(--border-hover); transform: translateY(-1px); }
+    .tc.dragging { opacity: 0.35; transform: scale(0.96); }
+    .tc-co { font-size: 0.625rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 0.125rem; }
+    .tc-ro { font-size: 0.8125rem; font-weight: 500; color: var(--text-primary); margin-bottom: 0.375rem; line-height: 1.35; }
+    .tc-mt { display: flex; align-items: center; gap: 0.375rem; flex-wrap: wrap; }
+    .tc-pl { font-size: 0.5625rem; padding: 0.0625rem 0.375rem; background: var(--bg-elevated); color: var(--text-muted); letter-spacing: 0.1em; text-transform: uppercase; }
+    .tc-dt { font-size: 0.625rem; color: rgba(162, 162, 158, 0.4); }
+    .tc-acts { position: absolute; top: 0.5rem; right: 0.5rem; display: flex; gap: 0.125rem; opacity: 0; transition: opacity 0.15s; }
+    .tc:hover .tc-acts { opacity: 1; }
+    .btn-tc {
+      background: var(--bg-elevated); border: 1px solid var(--border-color);
+      color: var(--text-muted); width: 22px; height: 22px;
+      display: flex; align-items: center; justify-content: center; padding: 0; transition: all 0.15s;
+    }
+    .btn-tc:hover { color: var(--text-primary); border-color: var(--border-hover); }
+    .btn-tc.del:hover { color: var(--col-rejected); }
+    .btn-tc svg { width: 11px; height: 11px; }
+
+    /* Dialogs & Side Panels */
+    dialog { 
+      background: var(--bg-secondary); 
+      border: none;
+      border-left: 1px solid var(--border-color); 
+      color: var(--text-primary); 
+      max-width: 560px; 
+      width: 100%; 
+      padding: 0; 
+      height: 100vh;
+      max-height: 100vh; 
+      display: none; 
+      flex-direction: column; 
+      position: fixed;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      margin: 0 0 0 auto;
+    }
+    dialog[open] { display: flex; }
+    dialog::backdrop { background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); }
+    
+    /* Scrollable Container inside Dialog */
+    .mi { padding: 2rem 1.75rem; overflow-y: auto; display: flex; flex-direction: column; gap: 0.5rem; height: 100%; }
+    
+    .mh { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; flex-shrink: 0; }
+    .mh h3 { font-family: var(--font-serif); font-size: 1.25rem; font-weight: 400; }
+    .btn-x { background: transparent; border: none; color: var(--text-muted); padding: 0.25rem; transition: color 0.2s; }
+    .btn-x:hover { color: var(--text-primary); }
+    .btn-x svg { width: 18px; height: 18px; }
+    
+    .fg2 { margin-bottom: 1.25rem; flex-shrink: 0; }
+    .fg2 label { display: block; font-size: 0.6875rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 0.4375rem; }
+    .fg2 input, .fg2 select, .fg2 textarea {
+      width: 100%; background: var(--bg-primary); border: 1px solid var(--border-color);
+      color: var(--text-primary); font-size: 0.875rem; padding: 0.625rem 0.875rem;
+      outline: none; transition: border-color 0.2s;
+    }
+    .fg2 input:focus, .fg2 select:focus, .fg2 textarea:focus { border-color: var(--border-hover); }
+    .fg2 select { appearance: none; background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%23a2a29e' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 0.75rem center; padding-right: 2.25rem; }
+    .fg2 select option { background: var(--bg-primary); color: var(--text-primary); }
+    .fg2 textarea { resize: vertical; min-height: 70px; }
+    .fg2 .hint { font-size: 0.6875rem; color: var(--text-muted); margin-top: 0.375rem; line-height: 1.5; }
+    .fg2 .hint a { color: var(--text-secondary); text-decoration: underline; text-underline-offset: 3px; }
+    
+    .fr2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+    .mfoot { display: flex; gap: 0.625rem; justify-content: flex-end; margin-top: 1.5rem; flex-shrink: 0; }
+    .btn-cancel { background: transparent; border: 1px solid var(--border-color); color: var(--text-muted); padding: 0.5625rem 1.125rem; font-size: 0.8125rem; transition: all 0.2s; }
+    .btn-cancel:hover { color: var(--text-primary); border-color: var(--border-hover); }
+    .btn-submit { background: var(--text-primary); color: var(--bg-primary); border: none; padding: 0.5625rem 1.25rem; font-size: 0.8125rem; font-weight: 500; letter-spacing: 0.02em; transition: opacity 0.2s; }
+    .btn-submit:hover { opacity: 0.85; }
+
+    /* Settings-specific */
+    .settings-section { margin-bottom: 1.75rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--border-color); flex-shrink: 0; }
+    .settings-section:last-of-type { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+    .settings-section h4 { font-size: 0.875rem; font-weight: 500; margin-bottom: 0.25rem; color: var(--text-primary); }
+    .settings-section .sec-desc { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.875rem; line-height: 1.5; }
+    
+    .api-badge {
+      display: inline-flex; align-items: center; gap: 0.375rem;
+      font-size: 0.6875rem; padding: 0.25rem 0.625rem;
+      border: 1px solid var(--border-color); margin-bottom: 0.75rem;
+    }
+    .api-badge .dot { width: 5px; height: 5px; border-radius: 50%; }
+    .api-badge.ok .dot { background: var(--col-offer); }
+    .api-badge.free .dot { background: #12CBC4; }
+    .api-badge.off .dot { background: var(--col-rejected); }
+
+    /* Company list wrapper with scroll */
+    .company-list { display: flex; flex-wrap: wrap; gap: 0.375rem; margin-bottom: 0.75rem; max-height: 180px; overflow-y: auto; padding: 0.5rem; background: var(--bg-primary); border: 1px solid var(--border-color); }
+    
+    .company-tag {
+      display: inline-flex; align-items: center; gap: 0.25rem;
+      background: var(--bg-secondary); border: 1px solid var(--border-color);
+      padding: 0.25rem 0.5rem; font-size: 0.6875rem; color: var(--text-secondary);
+    }
+    .company-tag button {
+      background: none; border: none; color: var(--text-muted);
+      font-size: 0.875rem; line-height: 1; padding: 0; margin-left: 0.125rem;
+      transition: color 0.15s;
+    }
+    .company-tag button:hover { color: var(--col-rejected); }
+    
+    .add-company-row { display: flex; gap: 0.5rem; }
+    .add-company-row input { flex: 1; }
+    .add-company-row select { width: 110px; }
+    .btn-add-co {
+      background: var(--bg-elevated); border: 1px solid var(--border-color);
+      color: var(--text-secondary); padding: 0 0.75rem; font-size: 0.8125rem;
+      transition: all 0.2s;
+    }
+    .btn-add-co:hover { color: var(--text-primary); border-color: var(--border-hover); }
+
+    /* Toast */
+    .toast-container { position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 2000; display: flex; flex-direction: column; gap: 0.5rem; }
+    .toast { background: var(--bg-elevated); border: 1px solid var(--border-color); color: var(--text-primary); padding: 0.625rem 1rem; font-size: 0.8125rem; display: flex; align-items: center; gap: 0.5rem; animation: toastIn 0.3s cubic-bezier(0.16, 1, 0.3, 1); min-width: 220px; }
+    .toast.fade-out { animation: toastOut 0.3s ease forwards; }
+    @keyframes toastIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+    @keyframes toastOut { from { transform: translateX(0); opacity: 1; } to { transform: translateX(100%); opacity: 0; } }
+
+    /* Responsive */
+    @media (max-width: 1024px) { .kanban-board { grid-template-columns: repeat(3, 1fr); } .stats-strip { grid-template-columns: repeat(3, 1fr); } }
+    @media (max-width: 768px) {
+      .container { padding: 0 1rem; } .nav-container { padding: 0 1rem; }
+      .search-row { flex-direction: column; } .loc-field { max-width: none; }
+      .stats-strip { grid-template-columns: repeat(2, 1fr); }
+      .kanban-board { grid-template-columns: 1fr; min-height: auto; }
+      .kanban-col { min-height: 180px; } .jl { flex-direction: column; gap: 0.75rem; }
+      .jl-logo { width: 40px; height: 40px; } .fr2 { grid-template-columns: 1fr; }
+      .tracker-header { flex-direction: column; align-items: flex-start; gap: 0.75rem; }
+      .jl-footer { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
+      .source-chips { margin-top: 0.5rem; }
+    }
+    @media (max-width: 480px) { main { padding-top: calc(var(--header-height) + 1.5rem); } .search-form { padding: 1rem; } .tab-btn { padding: 0.75rem 0.75rem; font-size: 0.8125rem; } }
+  </style>
+</head>
+<body>
+
+  <header id="main-header">
+    <nav class="nav-container">
+      <a href="../" class="nav-logo">Sundar Raj S</a>
+      <div class="nav-right">
+        <a href="../" class="nav-back">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+          Portfolio
+        </a>
+        <button class="btn-icon" id="btn-settings" title="Settings & API Keys">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <div class="container">
+      <div class="tab-bar">
+        <button class="tab-btn active" data-tab="search">Search Jobs</button>
+        <button class="tab-btn" data-tab="tracker">My Tracker <span class="tab-badge" id="tab-count">0</span></button>
+      </div>
+
+      <!-- ═══ SEARCH TAB ═══ -->
+      <div class="tab-panel active" id="panel-search">
+        <div class="search-panel-header">
+          <h1>Find Your Next Role</h1>
+          <p>Search real jobs in-app — from company career pages, LinkedIn, Indeed, Glassdoor & more. Save or apply with one click.</p>
+        </div>
+
+        <div class="search-form">
+          <div class="search-row">
+            <div class="search-field">
+              <svg class="fi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+              <input type="text" id="q" placeholder="Product Designer, UX Lead, Design Manager..." autofocus>
+            </div>
+            <div class="search-field loc-field">
+              <svg class="fi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              <input type="text" id="loc" placeholder="Location" value="India">
+            </div>
+            <button class="btn-search" id="btn-search">Search</button>
+          </div>
+          <div class="filter-row">
+            <div class="fg"><span class="fl">Type</span><select class="fs" id="f-type"><option value="">All</option><option value="FULLTIME">Full-time</option><option value="PARTTIME">Part-time</option><option value="CONTRACTOR">Contract</option><option value="INTERN">Internship</option></select></div>
+            <div class="fg"><span class="fl">Posted</span><select class="fs" id="f-date"><option value="">Any time</option><option value="today">Past 24h</option><option value="3days">Past 3 days</option><option value="week" selected>Past week</option><option value="month">Past month</option></select></div>
+            <div class="fg"><span class="fl">Remote</span><select class="fs" id="f-remote"><option value="">All</option><option value="true">Remote only</option></select></div>
+            <div class="fdiv"></div>
+            <div class="source-chips">
+              <button class="src-chip active" data-source="all">All Sources</button>
+              <button class="src-chip" data-source="careers">
+                <span class="src-dot" style="background:#10b981"></span>
+                Career Pages
+                <span class="src-hint">FREE</span>
+              </button>
+              <button class="src-chip" data-source="jsearch">
+                <span class="src-dot" style="background:#0A66C2"></span>
+                LinkedIn, Indeed & more
+              </button>
+              <button class="src-chip" data-source="remotive">
+                <span class="src-dot" style="background:#12CBC4"></span>
+                Remote Jobs
+              </button>
+            </div>
+          </div>
+
+          <div style="margin-top: 1.25rem; padding-top: 1.25rem; border-top: 1px dashed var(--border-color);">
+            <div class="fl" style="margin-bottom: 0.5rem;">Launch Search on External Sites:</div>
+            <div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
+              <button class="src-chip" onclick="searchExternal('linkedin')" style="border-color:#0A66C2; color:#0A66C2"><span class="src-dot" style="background:#0A66C2"></span>LinkedIn ↗</button>
+              <button class="src-chip" onclick="searchExternal('instahyre')" style="border-color:#FF6B35; color:#FF6B35"><span class="src-dot" style="background:#FF6B35"></span>Instahyre ↗</button>
+              <button class="src-chip" onclick="searchExternal('indeed')" style="border-color:#2164F3; color:#2164F3"><span class="src-dot" style="background:#2164F3"></span>Indeed ↗</button>
+              <button class="src-chip" onclick="searchExternal('naukri')" style="border-color:#4285F4; color:#4285F4"><span class="src-dot" style="background:#4285F4"></span>Naukri ↗</button>
+              <button class="src-chip" onclick="searchExternal('wellfound')" style="border-color:#E74C3C; color:#E74C3C"><span class="src-dot" style="background:#E74C3C"></span>Wellfound ↗</button>
+              <button class="src-chip" onclick="searchExternal('glassdoor')" style="border-color:#0CAA41; color:#0CAA41"><span class="src-dot" style="background:#0CAA41"></span>Glassdoor ↗</button>
+              <button class="src-chip" onclick="searchExternal('all')" style="border-color:var(--text-primary); color:var(--text-primary)">Search All Platforms 🚀</button>
+            </div>
+          </div>
+        </div>
+
+        <div id="results-area">
+          <div class="search-state" id="initial-state">
+            <div class="search-state-icon">🔍</div>
+            <h3>Search for jobs across multiple sources</h3>
+            <p>
+              <strong>Career Pages</strong> — directly from Greenhouse, Lever, Ashby, and SmartRecruiters (250+ companies)<br>
+              <strong>LinkedIn, Indeed & more</strong> — via JSearch API (free key required)<br>
+              <strong>Remote Jobs</strong> — via Remotive (free, no key needed)<br><br>
+              Configure sources and companies in ⚙️ Settings
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══ TRACKER TAB ═══ -->
+      <div class="tab-panel" id="panel-tracker">
+        <div class="tracker-header">
+          <h2>Application Tracker</h2>
+          <div class="tracker-actions">
+            <button class="btn-ta" id="btn-export"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Export CSV</button>
+            <button class="btn-ta primary" id="btn-add-manual"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Add Job</button>
+          </div>
+        </div>
+        <div class="stats-strip" id="stats-strip">
+          <div class="sc"><span class="sn" id="s-wishlist">0</span><span class="sl">Wishlist</span><span class="sb" style="background:var(--col-wishlist)"></span></div>
+          <div class="sc"><span class="sn" id="s-applied">0</span><span class="sl">Applied</span><span class="sb" style="background:var(--col-applied)"></span></div>
+          <div class="sc"><span class="sn" id="s-interview">0</span><span class="sl">Interview</span><span class="sb" style="background:var(--col-interview)"></span></div>
+          <div class="sc"><span class="sn" id="s-offer">0</span><span class="sl">Offer</span><span class="sb" style="background:var(--col-offer)"></span></div>
+          <div class="sc"><span class="sn" id="s-rejected">0</span><span class="sl">Rejected</span><span class="sb" style="background:var(--col-rejected)"></span></div>
+        </div>
+        <div class="kanban-board" id="kanban-board">
+          <div class="kanban-col" data-status="wishlist"><div class="kc-header"><span class="kc-dot" style="background:var(--col-wishlist)"></span><span class="kc-name">Wishlist</span><span class="kc-count" data-count="wishlist">0</span></div><div class="kc-cards" data-status="wishlist"></div></div>
+          <div class="kanban-col" data-status="applied"><div class="kc-header"><span class="kc-dot" style="background:var(--col-applied)"></span><span class="kc-name">Applied</span><span class="kc-count" data-count="applied">0</span></div><div class="kc-cards" data-status="applied"></div></div>
+          <div class="kanban-col" data-status="interview"><div class="kc-header"><span class="kc-dot" style="background:var(--col-interview)"></span><span class="kc-name">Interview</span><span class="kc-count" data-count="interview">0</span></div><div class="kc-cards" data-status="interview"></div></div>
+          <div class="kanban-col" data-status="offer"><div class="kc-header"><span class="kc-dot" style="background:var(--col-offer)"></span><span class="kc-name">Offer</span><span class="kc-count" data-count="offer">0</span></div><div class="kc-cards" data-status="offer"></div></div>
+          <div class="kanban-col" data-status="rejected"><div class="kc-header"><span class="kc-dot" style="background:var(--col-rejected)"></span><span class="kc-name">Rejected</span><span class="kc-count" data-count="rejected">0</span></div><div class="kc-cards" data-status="rejected"></div></div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <div class="toast-container" id="toast-container"></div>
+
+  <!-- Settings Dialog -->
+  <dialog id="dlg-settings" closedby="any" aria-labelledby="stitle">
+    <div class="mi">
+      <div class="mh"><h3 id="stitle">Settings</h3><button class="btn-x" id="x-settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>
+
+      <!-- Career Pages -->
+      <div class="settings-section">
+        <h4>🏢 Career Pages (Greenhouse, Lever, Ashby, SmartRecruiters)</h4>
+        <p class="sec-desc">Directly search career pages of specific companies. Free, no API key needed. These use their primary ATS systems — the same systems that power their public career sites.</p>
+        <div class="api-badge free"><span class="dot"></span>Free — no key required</div>
+        <label style="font-size:0.6875rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-muted);display:block;margin-bottom:0.4375rem">Companies to search</label>
+        <div class="company-list" id="company-list"></div>
+        <div class="add-company-row">
+          <input type="text" id="new-company-slug" placeholder="Company slug (e.g. razorpay)" style="background:var(--bg-primary);border:1px solid var(--border-color);color:var(--text-primary);font-size:0.8125rem;padding:0.5rem 0.75rem;outline:none">
+          <select id="new-company-ats" class="fs" style="width:120px">
+            <option value="greenhouse">Greenhouse</option>
+            <option value="lever">Lever</option>
+            <option value="ashby">Ashby</option>
+            <option value="smartrecruiters">SmartRecruiters</option>
+          </select>
+          <button class="btn-add-co" id="btn-add-co">+ Add</button>
+        </div>
+        <p class="hint" style="font-size:0.6875rem;color:var(--text-muted);margin-top:0.5rem;line-height:1.5">Slug = the company name in their career page URL.<br>Greenhouse: boards.greenhouse.io/<strong>slug</strong> → Lever: jobs.lever.co/<strong>slug</strong></p>
+      </div>
+
+      <!-- JSearch -->
+      <div class="settings-section">
+        <h4>🔗 LinkedIn, Indeed, Glassdoor & more</h4>
+        <p class="sec-desc">Powered by JSearch — a job aggregator that pulls listings from LinkedIn, Indeed, Glassdoor, ZipRecruiter and 20+ other platforms. Requires a free RapidAPI key (500 searches/month).</p>
+        <div class="api-badge off" id="jsearch-badge"><span class="dot"></span>Not configured</div>
+        <div class="fg2">
+          <label for="rapidapi-key">RapidAPI Key</label>
+          <div style="display:flex; gap:0.5rem; margin-bottom: 0.5rem;">
+            <input type="password" id="rapidapi-key" placeholder="Paste your RapidAPI key..." style="flex:1; background:var(--bg-primary); border:1px solid var(--border-color); color:var(--text-primary); font-size:0.875rem; padding:0.625rem 0.875rem; outline:none">
+            <button class="btn-add-co" id="btn-test-key" style="white-space:nowrap; padding:0 1rem">Test Key</button>
+          </div>
+          <div id="test-key-status" style="font-size: 0.75rem; margin-top: 0.25rem;"></div>
+          <p class="hint">Get a free key → <a href="https://rapidapi.com/letscrape-6bRBa3QguO5/api/jsearch" target="_blank" rel="noopener noreferrer">rapidapi.com/jsearch</a> → Subscribe to Free plan → Copy key from "X-RapidAPI-Key" header</p>
+        </div>
+      </div>
+
+      <!-- Remotive -->
+      <div class="settings-section">
+        <h4>🌐 Remote Jobs</h4>
+        <p class="sec-desc">Powered by Remotive — a curated remote job board. Always active, no key needed.</p>
+        <div class="api-badge free"><span class="dot"></span>Always active</div>
+      </div>
+
+      <div class="mfoot">
+        <button class="btn-cancel" id="cancel-settings">Cancel</button>
+        <button class="btn-submit" id="save-settings">Save Settings</button>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- Add Job Dialog -->
+  <dialog id="dlg-addjob" closedby="any" aria-labelledby="ajtitle">
+    <div class="mi">
+      <div class="mh"><h3 id="ajtitle">Add Job Manually</h3><button class="btn-x" id="x-addjob"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>
+      <form id="add-job-form">
+        <div class="fr2">
+          <div class="fg2"><label for="mj-co">Company</label><input type="text" id="mj-co" required placeholder="e.g. Google"></div>
+          <div class="fg2"><label for="mj-ro">Role</label><input type="text" id="mj-ro" required placeholder="e.g. Lead Product Designer"></div>
+        </div>
+        <div class="fr2">
+          <div class="fg2"><label for="mj-pl">Source</label><select id="mj-pl"><option>LinkedIn</option><option>Instahyre</option><option>Indeed</option><option>Naukri</option><option>Wellfound</option><option>Glassdoor</option><option>Company Site</option><option>Referral</option><option>Other</option></select></div>
+          <div class="fg2"><label for="mj-st">Status</label><select id="mj-st"><option value="wishlist">Wishlist</option><option value="applied">Applied</option><option value="interview">Interview</option><option value="offer">Offer</option><option value="rejected">Rejected</option></select></div>
+        </div>
+        <div class="fg2"><label for="mj-url">Job URL</label><input type="url" id="mj-url" placeholder="https://..."></div>
+        <div class="fg2"><label for="mj-notes">Notes</label><textarea id="mj-notes" placeholder="Salary, contact, next steps..."></textarea></div>
+        <div class="mfoot"><button type="button" class="btn-cancel" id="cancel-aj">Cancel</button><button type="submit" class="btn-submit" id="submit-aj">Add Job</button></div>
+      </form>
+    </div>
+  </dialog>
+
+  <script>
+  /* ====================================================================
+     JOB SEARCH COMMAND CENTER v4
+     Career Pages + JSearch + Remotive + Auto-Tracking
+     ==================================================================== */
+
+  const STORE_JOBS = 'jsc_jobs';
+  const STORE_SETTINGS = 'jsc_settings';
+  const STATUSES = ['wishlist','applied','interview','offer','rejected'];
+
+  // Default company list for career page search (250+ Top/Popular Product-Based Companies)
+  const DEFAULT_COMPANIES = [
+    // --- INDIA / TECH & SaaS LEADERS (Greenhouse/Lever/Ashby/SmartRecruiters) ---
+    { slug: 'razorpay', ats: 'greenhouse', name: 'Razorpay' },
+    { slug: 'cred56', ats: 'greenhouse', name: 'CRED' },
+    { slug: 'swiggy', ats: 'greenhouse', name: 'Swiggy' },
+    { slug: 'meesho', ats: 'greenhouse', name: 'Meesho' },
+    { slug: 'phonepe', ats: 'greenhouse', name: 'PhonePe' },
+    { slug: 'browserstack', ats: 'greenhouse', name: 'BrowserStack' },
+    { slug: 'postman', ats: 'greenhouse', name: 'Postman' },
+    { slug: 'groww', ats: 'greenhouse', name: 'Groww' },
+    { slug: 'dream11', ats: 'greenhouse', name: 'Dream11' },
+    { slug: 'nykaa', ats: 'greenhouse', name: 'Nykaa' },
+    { slug: 'zepto', ats: 'greenhouse', name: 'Zepto' },
+    { slug: 'ola', ats: 'greenhouse', name: 'Ola' },
+    { slug: 'paytm', ats: 'greenhouse', name: 'Paytm' },
+    { slug: 'freecharge', ats: 'greenhouse', name: 'Freecharge' },
+    { slug: 'dailyhunt', ats: 'greenhouse', name: 'Dailyhunt' },
+    { slug: 'byjus', ats: 'greenhouse', name: 'Byjus' },
+    { slug: 'unacademy', ats: 'greenhouse', name: 'Unacademy' },
+    { slug: 'vedantu', ats: 'greenhouse', name: 'Vedantu' },
+    { slug: 'upgrad', ats: 'greenhouse', name: 'upGrad' },
+    { slug: 'inmobi', ats: 'greenhouse', name: 'InMobi' },
+    { slug: 'glance', ats: 'greenhouse', name: 'Glance' },
+    { slug: 'sprinklr', ats: 'greenhouse', name: 'Sprinklr' },
+    { slug: 'freshworks2', ats: 'greenhouse', name: 'Freshworks' },
+    { slug: 'chargebee', ats: 'greenhouse', name: 'Chargebee' },
+    { slug: 'highradius', ats: 'greenhouse', name: 'HighRadius' },
+    { slug: 'druva', ats: 'greenhouse', name: 'Druva' },
+    { slug: 'hasura', ats: 'greenhouse', name: 'Hasura' },
+    { slug: 'clevertap', ats: 'greenhouse', name: 'CleverTap' },
+    { slug: 'yellowai', ats: 'greenhouse', name: 'Yellow.ai' },
+    { slug: 'gupshup', ats: 'greenhouse', name: 'Gupshup' },
+    { slug: 'urbancompany', ats: 'greenhouse', name: 'Urban Company' },
+    { slug: 'curefit', ats: 'greenhouse', name: 'Cure.fit' },
+    { slug: '1mg', ats: 'greenhouse', name: 'Tata 1mg' },
+    { slug: 'pharmeasy', ats: 'greenhouse', name: 'PharmEasy' },
+    { slug: 'lenskart', ats: 'greenhouse', name: 'Lenskart' },
+    { slug: 'caratlane', ats: 'greenhouse', name: 'CaratLane' },
+    { slug: 'myntra', ats: 'greenhouse', name: 'Myntra' },
+    { slug: 'flipkart', ats: 'greenhouse', name: 'Flipkart' },
+    { slug: 'jio', ats: 'greenhouse', name: 'Reliance Jio' },
+    { slug: 'mobikwik', ats: 'greenhouse', name: 'MobiKwik' },
+    { slug: 'pine-labs', ats: 'greenhouse', name: 'Pine Labs' },
+    { slug: 'bharatpe', ats: 'greenhouse', name: 'BharatPe' },
+    { slug: 'jupiter', ats: 'greenhouse', name: 'Jupiter' },
+    { slug: 'fi', ats: 'greenhouse', name: 'Fi Money' },
+    { slug: 'slice', ats: 'greenhouse', name: 'Slice' },
+    { slug: 'khatabook', ats: 'greenhouse', name: 'Khatabook' },
+    { slug: 'okcredit', ats: 'greenhouse', name: 'OkCredit' },
+    { slug: 'drishtiias', ats: 'greenhouse', name: 'Drishti IAS' },
+    { slug: 'pocket-novel', ats: 'greenhouse', name: 'Pocket FM' },
+    { slug: 'pratilipi', ats: 'greenhouse', name: 'Pratilipi' },
+    { slug: 'headfone', ats: 'greenhouse', name: 'Headfone' },
+    { slug: 'kuhoo', ats: 'greenhouse', name: 'Kuhoo' },
+    { slug: 'leegality', ats: 'greenhouse', name: 'Leegality' },
+    { slug: 'loginext', ats: 'greenhouse', name: 'LogiNext' },
+    { slug: 'farmseller', ats: 'greenhouse', name: 'Farmseller' },
+    { slug: 'country-delight', ats: 'greenhouse', name: "Country Delight" },
+    { slug: 'licious', ats: 'greenhouse', name: 'Licious' },
+    { slug: 'dunzo', ats: 'greenhouse', name: 'Dunzo' },
+    { slug: 'porter', ats: 'greenhouse', name: 'Porter' },
+    { slug: 'shadowfax', ats: 'greenhouse', name: 'Shadowfax' },
+    { slug: 'delhivery', ats: 'greenhouse', name: 'Delhivery' },
+    { slug: 'shiprocket', ats: 'greenhouse', name: 'Shiprocket' },
+    { slug: 'blackbuck', ats: 'greenhouse', name: 'BlackBuck' },
+    { slug: 'rivigo', ats: 'greenhouse', name: 'Rivigo' },
+    { slug: 'elasticrun', ats: 'greenhouse', name: 'ElasticRun' },
+    { slug: 'ninjacart', ats: 'greenhouse', name: 'Ninjacart' },
+    { slug: 'waycool', ats: 'greenhouse', name: 'WayCool' },
+    { slug: 'dehaat', ats: 'greenhouse', name: 'DeHaat' },
+    { slug: 'agrostar', ats: 'greenhouse', name: 'AgroStar' },
+    { slug: 'resilient', ats: 'greenhouse', name: 'Resilient' },
+
+    // --- GLOBAL TOP TECH (Greenhouse / Lever / Ashby / SmartRecruiters) ---
+    { slug: 'figma', ats: 'greenhouse', name: 'Figma' },
+    { slug: 'stripe', ats: 'greenhouse', name: 'Stripe' },
+    { slug: 'airbnb', ats: 'greenhouse', name: 'Airbnb' },
+    { slug: 'uber', ats: 'greenhouse', name: 'Uber' },
+    { slug: 'pinterest', ats: 'greenhouse', name: 'Pinterest' },
+    { slug: 'slack', ats: 'greenhouse', name: 'Slack' },
+    { slug: 'zoom', ats: 'greenhouse', name: 'Zoom' },
+    { slug: 'hubspot', ats: 'greenhouse', name: 'HubSpot' },
+    { slug: 'okta', ats: 'greenhouse', name: 'Okta' },
+    { slug: 'twilio', ats: 'greenhouse', name: 'Twilio' },
+    { slug: 'cloudflare', ats: 'greenhouse', name: 'Cloudflare' },
+    { slug: 'crowdstrike', ats: 'greenhouse', name: 'Crowdstrike' },
+    { slug: 'palantir', ats: 'greenhouse', name: 'Palantir' },
+    { slug: 'salesforce', ats: 'greenhouse', name: 'Salesforce' },
+    { slug: 'adobe', ats: 'greenhouse', name: 'Adobe' },
+    { slug: 'microsoft', ats: 'greenhouse', name: 'Microsoft' },
+    { slug: 'google', ats: 'greenhouse', name: 'Google' },
+    { slug: 'meta', ats: 'greenhouse', name: 'Meta' },
+    { slug: 'apple', ats: 'greenhouse', name: 'Apple' },
+    { slug: 'netflix', ats: 'lever', name: 'Netflix' },
+    { slug: 'vercel', ats: 'lever', name: 'Vercel' },
+    { slug: 'notion', ats: 'greenhouse', name: 'Notion' },
+    { slug: 'linear03', ats: 'lever', name: 'Linear' },
+    { slug: 'openai', ats: 'greenhouse', name: 'OpenAI' },
+    { slug: 'anthropic', ats: 'ashby', name: 'Anthropic' },
+    { slug: 'canva', ats: 'greenhouse', name: 'Canva' },
+    { slug: 'snapchat', ats: 'greenhouse', name: 'Snap' },
+    { slug: 'reddit', ats: 'greenhouse', name: 'Reddit' },
+    { slug: 'discord', ats: 'greenhouse', name: 'Discord' },
+    { slug: 'dropbox', ats: 'greenhouse', name: 'Dropbox' },
+    { slug: 'box', ats: 'greenhouse', name: 'Box' },
+    { slug: 'spotify', ats: 'greenhouse', name: 'Spotify' },
+    { slug: 'shopify', ats: 'greenhouse', name: 'Shopify' },
+    { slug: 'squarespace', ats: 'greenhouse', name: 'Squarespace' },
+    { slug: 'wix', ats: 'greenhouse', name: 'Wix' },
+    { slug: 'webflow', ats: 'greenhouse', name: 'Webflow' },
+    { slug: 'atlassian', ats: 'greenhouse', name: 'Atlassian' },
+    { slug: 'gitlab', ats: 'greenhouse', name: 'GitLab' },
+    { slug: 'github', ats: 'greenhouse', name: 'GitHub' },
+    { slug: 'datadog', ats: 'greenhouse', name: 'Datadog' },
+    { slug: 'newrelic', ats: 'greenhouse', name: 'New Relic' },
+    { slug: 'dynatrace', ats: 'greenhouse', name: 'Dynatrace' },
+    { slug: 'splunk', ats: 'greenhouse', name: 'Splunk' },
+    { slug: 'elastic', ats: 'greenhouse', name: 'Elastic' },
+    { slug: 'mongodb', ats: 'greenhouse', name: 'MongoDB' },
+    { slug: 'snowflake', ats: 'greenhouse', name: 'Snowflake' },
+    { slug: 'databricks', ats: 'greenhouse', name: 'Databricks' },
+    { slug: 'confluent', ats: 'greenhouse', name: 'Confluent' },
+    { slug: 'cloudera', ats: 'greenhouse', name: 'Cloudera' },
+    { slug: 'couchbase', ats: 'greenhouse', name: 'Couchbase' },
+    { slug: 'neo4j', ats: 'greenhouse', name: 'Neo4j' },
+    { slug: 'redis', ats: 'greenhouse', name: 'Redis' },
+    { slug: 'hashicorp', ats: 'greenhouse', name: 'HashiCorp' },
+    { slug: 'snyk', ats: 'greenhouse', name: 'Snyk' },
+    { slug: 'auth0', ats: 'greenhouse', name: 'Auth0' },
+    { slug: 'onelogin', ats: 'greenhouse', name: 'OneLogin' },
+    { slug: 'pingidentity', ats: 'greenhouse', name: 'Ping Identity' },
+    { slug: 'cyberark', ats: 'greenhouse', name: 'CyberArk' },
+    { slug: 'rapid7', ats: 'greenhouse', name: 'Rapid7' },
+    { slug: 'tenable', ats: 'greenhouse', name: 'Tenable' },
+    { slug: 'qualys', ats: 'greenhouse', name: 'Qualys' },
+    { slug: 'fortinet', ats: 'greenhouse', name: 'Fortinet' },
+    { slug: 'paloaltonetworks', ats: 'greenhouse', name: 'Palo Alto Networks' },
+    { slug: 'zscaler', ats: 'greenhouse', name: 'Zscaler' },
+    { slug: 'netskope', ats: 'greenhouse', name: 'Netskope' },
+    { slug: 'f5', ats: 'greenhouse', name: 'F5' },
+    { slug: 'citrix', ats: 'greenhouse', name: 'Citrix' },
+    { slug: 'vmware', ats: 'greenhouse', name: 'VMware' },
+    { slug: 'nutanix', ats: 'greenhouse', name: 'Nutanix' },
+    { slug: 'purestorage', ats: 'greenhouse', name: 'Pure Storage' },
+    { slug: 'netapp', ats: 'greenhouse', name: 'NetApp' },
+    { slug: 'seagate', ats: 'greenhouse', name: 'Seagate' },
+    { slug: 'western-digital', ats: 'greenhouse', name: 'Western Digital' },
+    { slug: 'intel', ats: 'greenhouse', name: 'Intel' },
+    { slug: 'amd', ats: 'greenhouse', name: 'AMD' },
+    { slug: 'nvidia', ats: 'greenhouse', name: 'Nvidia' },
+    { slug: 'qualcomm', ats: 'greenhouse', name: 'Qualcomm' },
+    { slug: 'broadcom', ats: 'greenhouse', name: 'Broadcom' },
+    { slug: 'marvell', ats: 'greenhouse', name: 'Marvell' },
+    { slug: 'analog-devices', ats: 'greenhouse', name: 'Analog Devices' },
+    { slug: 'texas-instruments', ats: 'greenhouse', name: 'Texas Instruments' },
+    { slug: 'nxp', ats: 'greenhouse', name: 'NXP' },
+    { slug: 'infineon', ats: 'greenhouse', name: 'Infineon' },
+    { slug: 'stmicroelectronics', ats: 'greenhouse', name: 'STMicroelectronics' },
+    { slug: 'renesas', ats: 'greenhouse', name: 'Renesas' },
+    { slug: 'asml', ats: 'greenhouse', name: 'ASML' },
+    { slug: 'lam-research', ats: 'greenhouse', name: 'Lam Research' },
+    { slug: 'applied-materials', ats: 'greenhouse', name: 'Applied Materials' },
+    { slug: 'kla', ats: 'greenhouse', name: 'KLA' },
+    { slug: 'synopsys', ats: 'greenhouse', name: 'Synopsys' },
+    { slug: 'cadence', ats: 'greenhouse', name: 'Cadence' },
+    { slug: 'ansys', ats: 'greenhouse', name: 'Ansys' },
+    { slug: 'autodesk', ats: 'greenhouse', name: 'Autodesk' },
+    { slug: 'bentley', ats: 'greenhouse', name: 'Bentley Systems' },
+    { slug: 'ptc', ats: 'greenhouse', name: 'PTC' },
+    { slug: 'siemens', ats: 'greenhouse', name: 'Siemens' },
+    { slug: 'sap', ats: 'greenhouse', name: 'SAP' },
+    { slug: 'oracle', ats: 'greenhouse', name: 'Oracle' },
+    { slug: 'ibm', ats: 'greenhouse', name: 'IBM' },
+    { slug: 'accenture', ats: 'greenhouse', name: 'Accenture' },
+    { slug: 'cognizant', ats: 'greenhouse', name: 'Cognizant' },
+    { slug: 'infosys', ats: 'greenhouse', name: 'Infosys' },
+    { slug: 'wipro', ats: 'greenhouse', name: 'Wipro' },
+    { slug: 'tcs', ats: 'greenhouse', name: 'TCS' },
+    { slug: 'hcl', ats: 'greenhouse', name: 'HCLTech' },
+    { slug: 'tech-mahindra', ats: 'greenhouse', name: 'Tech Mahindra' },
+    { slug: 'lnt-infotech', ats: 'greenhouse', name: 'LTIMindtree' },
+    { slug: 'persistent', ats: 'greenhouse', name: 'Persistent Systems' },
+    { slug: 'coforge', ats: 'greenhouse', name: 'Coforge' },
+    { slug: 'mphasis', ats: 'greenhouse', name: 'Mphasis' },
+    { slug: 'virtusa', ats: 'greenhouse', name: 'Virtusa' },
+    { slug: 'ust-global', ats: 'greenhouse', name: 'UST' },
+    { slug: 'genpact', ats: 'greenhouse', name: 'Genpact' },
+    { slug: 'wns', ats: 'greenhouse', name: 'WNS' },
+    { slug: 'exl', ats: 'greenhouse', name: 'EXL Service' },
+    { slug: 'mu-sigma', ats: 'greenhouse', name: 'Mu Sigma' },
+    { slug: 'fractal-analytics', ats: 'greenhouse', name: 'Fractal Analytics' },
+    { slug: 'tiger-analytics', ats: 'greenhouse', name: 'Tiger Analytics' },
+    { slug: 'latenteview', ats: 'greenhouse', name: 'LatentView' },
+    { slug: 'sigmoid', ats: 'greenhouse', name: 'Sigmoid' },
+    { slug: 'quantiphi', ats: 'greenhouse', name: 'Quantiphi' },
+    { slug: 'bridgei2i', ats: 'greenhouse', name: 'BRIDGEi2i' },
+    { slug: 'absolutdata', ats: 'greenhouse', name: 'Absolutdata' },
+    { slug: 'market-share', ats: 'greenhouse', name: 'MarketShare' },
+
+    // Ashby Global & Indian ATS Companies
+    { slug: 'sentry', ats: 'ashby', name: 'Sentry' },
+    { slug: 'retool', ats: 'ashby', name: 'Retool' },
+    { slug: 'sourcegraph', ats: 'ashby', name: 'Sourcegraph' },
+    { slug: 'linear', ats: 'ashby', name: 'Linear (Ashby)' },
+    { slug: 'vannevar-labs', ats: 'ashby', name: 'Vannevar Labs' },
+    { slug: 'ramp', ats: 'ashby', name: 'Ramp' },
+    { slug: 'hightouch', ats: 'ashby', name: 'Hightouch' },
+    { slug: 'airtable', ats: 'ashby', name: 'Airtable' },
+    { slug: 'lookeer', ats: 'ashby', name: 'Looker' },
+
+    // SmartRecruiters Global & Indian ATS Companies
+    { slug: 'ubisoft', ats: 'smartrecruiters', name: 'Ubisoft' },
+    { slug: 'visa', ats: 'smartrecruiters', name: 'Visa' },
+    { slug: 'ikea', ats: 'smartrecruiters', name: 'IKEA' },
+    { slug: 'bosch', ats: 'smartrecruiters', name: 'Bosch Group' },
+    { slug: 'colliers', ats: 'smartrecruiters', name: 'Colliers' },
+    { slug: 'equinix', ats: 'smartrecruiters', name: 'Equinix' },
+    { slug: 'alteryx', ats: 'smartrecruiters', name: 'Alteryx' },
+    { slug: 'square', ats: 'smartrecruiters', name: 'Block (Square)' },
+  ];
+
+  // ── State ────────────────────────────────────────────────────────
+  let trackedJobs = [];
+  let settings = { rapidapiKey: '', companies: [...DEFAULT_COMPANIES] };
+  let searchResults = [];
+  let currentPage = 1;
+  let totalPages = 1;
+  let lastSearch = {};
+  let activeSource = 'all';
+  let editingJobId = null;
+
+  // ── Persistence ──────────────────────────────────────────────────
+  function load() {
+    try { trackedJobs = JSON.parse(localStorage.getItem(STORE_JOBS)) || []; } catch { trackedJobs = []; }
+    try {
+      const s = JSON.parse(localStorage.getItem(STORE_SETTINGS));
+      if (s) {
+        settings = s;
+        if (!settings.companies || settings.companies.length === 0) settings.companies = [...DEFAULT_COMPANIES];
+      }
+    } catch { /* keep defaults */ }
+  }
+
+  function saveJobs() { localStorage.setItem(STORE_JOBS, JSON.stringify(trackedJobs)); }
+  function saveSettings() { localStorage.setItem(STORE_SETTINGS, JSON.stringify(settings)); }
+
+  // ── DOM ──────────────────────────────────────────────────────────
+  const $ = s => document.querySelector(s);
+  const $$ = s => document.querySelectorAll(s);
+  const resultsArea = $('#results-area');
+  const kanbanBoard = $('#kanban-board');
+  const toastBox = $('#toast-container');
+
+  // ── Tabs ─────────────────────────────────────────────────────────
+  $$('.tab-btn').forEach(b => {
+    b.addEventListener('click', () => {
+      $$('.tab-btn').forEach(t => t.classList.remove('active'));
+      $$('.tab-panel').forEach(p => p.classList.remove('active'));
+      b.classList.add('active');
+      $(`#panel-${b.dataset.tab}`).classList.add('active');
+    });
+  });
+
+  // ── Toast ────────────────────────────────────────────────────────
+  function toast(msg) {
+    const el = document.createElement('div');
+    el.className = 'toast'; el.textContent = msg;
+    toastBox.appendChild(el);
+    setTimeout(() => { el.classList.add('fade-out'); el.addEventListener('animationend', () => el.remove()); }, 2500);
+  }
+
+  // ── Dialog helpers ───────────────────────────────────────────────
+  function initDlg(dlg, xBtn, cBtn) {
+    xBtn?.addEventListener('click', () => dlg.close());
+    cBtn?.addEventListener('click', () => dlg.close());
+    if (!('closedBy' in HTMLDialogElement.prototype)) {
+      dlg.addEventListener('click', e => {
+        if (e.target !== dlg) return;
+        const r = dlg.getBoundingClientRect();
+        if (r.top <= e.clientY && e.clientY <= r.top + r.height && r.left <= e.clientX && e.clientX <= r.left + r.width) return;
+        dlg.close();
+      });
+    }
+  }
+
+  const dlgSettings = $('#dlg-settings');
+  const dlgAddJob = $('#dlg-addjob');
+  initDlg(dlgSettings, $('#x-settings'), $('#cancel-settings'));
+  initDlg(dlgAddJob, $('#x-addjob'), $('#cancel-aj'));
+
+  // ── Source chips ─────────────────────────────────────────────────
+  $$('.src-chip').forEach(c => {
+    c.addEventListener('click', () => {
+      $$('.src-chip').forEach(x => x.classList.remove('active'));
+      c.classList.add('active');
+      activeSource = c.dataset.source;
+    });
+  });
+
+  // ════════════════════════════════════════════════════════════════
+  // API LAYER
+  // ════════════════════════════════════════════════════════════════
+
+  // ── Ashby API (free, no auth) ────────────────────────────────────
+  async function fetchAshby(company, query) {
+    try {
+      const res = await fetch(`https://api.ashbyhq.com/posting-api/job-board/${company.slug}`);
+      if (!res.ok) return [];
+
+      const data = await res.json();
+      const qWords = query.toLowerCase().split(/\s+/).filter(w => w.length > 1);
+
+      return (data.jobs || [])
+        .filter(j => {
+          const title = (j.title || '').toLowerCase();
+          const loc = (j.location || '').toLowerCase();
+          const dept = (j.department || '').toLowerCase();
+          const text = title + ' ' + loc + ' ' + dept;
+          return qWords.every(w => text.includes(w));
+        })
+        .map(j => ({
+          id: `as-${company.slug}-${j.id}`,
+          title: j.title,
+          company: company.name || company.slug,
+          logo: null,
+          location: j.location || '',
+          type: j.employmentType || '',
+          salary: '',
+          description: stripHtml(j.description || '').slice(0, 300),
+          url: j.jobUrl,
+          posted: j.publishedAt,
+          remote: (j.location || '').toLowerCase().includes('remote'),
+          source: 'ashby',
+          publisher: company.name || company.slug,
+        }));
+    } catch (err) {
+      console.warn(`Ashby error (${company.slug}):`, err.message);
+      return [];
+    }
+  }
+
+  // ── SmartRecruiters API (free, no auth) ──────────────────────────
+  async function fetchSmartRecruiters(company, query) {
+    try {
+      const res = await fetch(`https://api.smartrecruiters.com/v1/companies/${company.slug}/postings`);
+      if (!res.ok) return [];
+
+      const data = await res.json();
+      const qWords = query.toLowerCase().split(/\s+/).filter(w => w.length > 1);
+
+      return (data.content || [])
+        .filter(j => {
+          const title = (j.name || '').toLowerCase();
+          const loc = (j.location?.city || '').toLowerCase();
+          const text = title + ' ' + loc;
+          return qWords.every(w => text.includes(w));
+        })
+        .map(j => ({
+          id: `sr-${company.slug}-${j.id}`,
+          title: j.name,
+          company: company.name || company.slug,
+          logo: null,
+          location: [j.location?.city, j.location?.region, j.location?.country].filter(Boolean).join(', '),
+          type: j.typeOfEmployment?.label || '',
+          salary: '',
+          description: '',
+          url: `https://jobs.smartrecruiters.com/${company.slug}/${j.id}`,
+          posted: j.releasedDate,
+          remote: (j.location?.city || '').toLowerCase().includes('remote'),
+          source: 'smartrecruiters',
+          publisher: company.name || company.slug,
+        }));
+    } catch (err) {
+      console.warn(`SmartRecruiters error (${company.slug}):`, err.message);
+      return [];
+    }
+  }
+
+  // ── Greenhouse Boards API (free, no auth) ────────────────────────
+  async function fetchGreenhouse(company, query) {
+    try {
+      const res = await fetch(`https://boards-api.greenhouse.io/v1/boards/${company.slug}/jobs?content=true`);
+      if (!res.ok) return [];
+
+      const data = await res.json();
+      const qWords = query.toLowerCase().split(/\s+/).filter(w => w.length > 1);
+
+      return (data.jobs || [])
+        .filter(j => {
+          const title = (j.title || '').toLowerCase();
+          const loc = (j.location?.name || '').toLowerCase();
+          const dept = (j.departments?.map(d => d.name).join(' ') || '').toLowerCase();
+          const text = title + ' ' + loc + ' ' + dept;
+          
+          // Match all words in query (AND logic) for higher relevance, or at least a strict sequence match
+          return qWords.every(w => text.includes(w));
+        })
+        .map(j => ({
+          id: `gh-${company.slug}-${j.id}`,
+          title: j.title,
+          company: company.name || company.slug,
+          logo: null,
+          location: j.location?.name || '',
+          type: j.departments?.map(d => d.name).join(', ') || '',
+          salary: '',
+          description: stripHtml(j.content || '').slice(0, 300),
+          url: j.absolute_url,
+          posted: j.updated_at || j.first_published_at,
+          remote: (j.location?.name || '').toLowerCase().includes('remote'),
+          source: 'greenhouse',
+          publisher: company.name || company.slug,
+        }));
+    } catch (err) {
+      console.warn(`Greenhouse error (${company.slug}):`, err.message);
+      return [];
+    }
+  }
+
+  // ── Lever API (free, no auth) ────────────────────────────────────
+  async function fetchLever(company, query) {
+    try {
+      const res = await fetch(`https://api.lever.co/v0/postings/${company.slug}?mode=json`);
+      if (!res.ok) return [];
+
+      const data = await res.json();
+      const qWords = query.toLowerCase().split(/\s+/).filter(w => w.length > 1);
+
+      return (data || [])
+        .filter(j => {
+          const title = (j.text || '').toLowerCase();
+          const cats = JSON.stringify(j.categories || {}).toLowerCase();
+          const desc = (j.descriptionPlain || '').toLowerCase().slice(0, 500);
+          const text = title + ' ' + cats + ' ' + desc;
+          
+          // Match all words in query (AND logic)
+          return qWords.every(w => text.includes(w));
+        })
+        .map(j => ({
+          id: `lv-${company.slug}-${j.id}`,
+          title: j.text,
+          company: company.name || company.slug,
+          logo: null,
+          location: j.categories?.location || '',
+          type: j.categories?.commitment || '',
+          salary: '',
+          description: (j.descriptionPlain || '').slice(0, 300),
+          url: j.hostedUrl || j.applyUrl,
+          posted: j.createdAt ? new Date(j.createdAt).toISOString() : null,
+          remote: (j.categories?.location || '').toLowerCase().includes('remote'),
+          source: 'lever',
+          publisher: company.name || company.slug,
+        }));
+    } catch (err) {
+      console.warn(`Lever error (${company.slug}):`, err.message);
+      return [];
+    }
+  }
+
+  // ── Career Pages unified ─────────────────────────────────────────
+  async function fetchCareerPages(query, location) {
+    const promises = settings.companies.map(co => {
+      if (co.ats === 'lever') return fetchLever(co, query);
+      if (co.ats === 'ashby') return fetchAshby(co, query);
+      if (co.ats === 'smartrecruiters') return fetchSmartRecruiters(co, query);
+      return fetchGreenhouse(co, query);
+    });
+
+    const results = await Promise.allSettled(promises);
+    let allJobs = [];
+
+    results.forEach(r => {
+      if (r.status === 'fulfilled') allJobs.push(...r.value);
+    });
+
+    // Filter by location if specified (make it flexible: if 'india' is used, check for 'india' or 'remote/worldwide/anywhere')
+    if (location) {
+      const loc = location.toLowerCase().trim();
+      allJobs = allJobs.filter(j => {
+        const jloc = (j.location || '').toLowerCase();
+        return jloc.includes(loc) || jloc.includes('remote') || jloc.includes('anywhere') || jloc.includes('worldwide') || jloc === '';
+      });
+    }
+
+    return { jobs: allJobs, totalPages: 1, source: 'careers' };
+  }
+
+  // ── JSearch (RapidAPI) ───────────────────────────────────────────
+  async function fetchJSearch(query, location, page, filters) {
+    if (!settings.rapidapiKey) return { jobs: [], totalPages: 0, source: 'jsearch' };
+
+    let q = query;
+    if (location) q += ` in ${location}`;
+
+    const params = new URLSearchParams({ query: q, page: String((page - 1) * 3 + 1), num_pages: '3' });
+    if (filters.datePosted) params.set('date_posted', filters.datePosted);
+    if (filters.remote === 'true') params.set('remote_jobs_only', 'true');
+    if (filters.employmentType) params.set('employment_types', filters.employmentType);
+
+    try {
+      const res = await fetch(`https://jsearch.p.rapidapi.com/search-v2?${params}`, {
+        headers: { 'X-RapidAPI-Key': settings.rapidapiKey, 'X-RapidAPI-Host': 'jsearch.p.rapidapi.com' }
+      });
+      if (!res.ok) {
+        if (res.status === 429) throw new Error('Rate limit hit — try again in a minute');
+        if (res.status === 403) throw new Error('Invalid API key — check Settings');
+        throw new Error(`API error ${res.status}`);
+      }
+      const data = await res.json();
+      const jobList = Array.isArray(data.data) ? data.data : (data.data?.jobs || []);
+      return {
+        jobs: jobList.map(j => ({
+          id: j.job_id || crypto.randomUUID(),
+          title: j.job_title,
+          company: j.employer_name,
+          logo: j.employer_logo,
+          location: [j.job_city, j.job_state, j.job_country].filter(Boolean).join(', '),
+          type: fmtType(j.job_employment_type),
+          salary: fmtSalary(j.job_min_salary, j.job_max_salary, j.job_salary_currency),
+          description: stripHtml(j.job_description || '').slice(0, 300),
+          url: j.job_apply_link || j.job_google_link,
+          posted: j.job_posted_at_datetime_utc,
+          remote: j.job_is_remote,
+          source: 'jsearch',
+          publisher: j.job_publisher || 'LinkedIn/Indeed',
+        })),
+        totalPages: Math.ceil((data.total || 10) / 10),
+        source: 'jsearch'
+      };
+    } catch (err) { console.error('JSearch:', err); throw err; }
+  }
+
+  // ── Remotive (free) ──────────────────────────────────────────────
+  async function fetchRemotive(query, location, filters) {
+    const params = new URLSearchParams({ search: query, limit: '20' });
+    const cats = { designer:'design', 'product designer':'design', ux:'design', developer:'software-dev', engineer:'software-dev', marketing:'marketing', data:'data' };
+    const lq = query.toLowerCase();
+    for (const [k, v] of Object.entries(cats)) { if (lq.includes(k)) { params.set('category', v); break; } }
+
+    try {
+      const res = await fetch(`https://remotive.com/api/remote-jobs?${params}`);
+      if (!res.ok) throw new Error(`Remotive: ${res.status}`);
+      const data = await res.json();
+
+      let jobs = (data.jobs || []).map(j => ({
+        id: `rem-${j.id}`,
+        title: j.title, company: j.company_name, logo: j.company_logo_url || null,
+        location: j.candidate_required_location || 'Remote',
+        type: j.job_type || 'Full-time', salary: j.salary || '',
+        description: stripHtml(j.description || '').slice(0, 300),
+        url: j.url, posted: j.publication_date, remote: true,
+        source: 'remotive', publisher: 'Remotive',
+      }));
+
+      if (location) {
+        const loc = location.toLowerCase();
+        jobs = jobs.filter(j => (j.location||'').toLowerCase().includes(loc) || j.location==='Worldwide' || j.location==='Remote');
+      }
+      if (filters.employmentType) {
+        const tm = { FULLTIME:'full_time', PARTTIME:'part_time', CONTRACTOR:'contract', INTERN:'internship' };
+        const rt = tm[filters.employmentType];
+        if (rt) jobs = jobs.filter(j => (j.type||'').toLowerCase().replace(/[\s-]/g,'_').includes(rt));
+      }
+      return { jobs, totalPages: 1, source: 'remotive' };
+    } catch (err) { console.error('Remotive:', err); throw err; }
+  }
+
+  // ── Unified Search ───────────────────────────────────────────────
+  async function searchJobs(query, location, page, filters) {
+    const promises = [];
+    const src = activeSource;
+
+    if (src === 'all' || src === 'careers') {
+      promises.push(fetchCareerPages(query, location).catch(e => ({ jobs: [], source: 'careers', error: e.message })));
+    }
+    if (src === 'jsearch' && !settings.rapidapiKey) {
+      return { jobs: [], totalPages: 0, errors: ['RapidAPI key is required to search LinkedIn, Indeed & Glassdoor in-app. Click the ⚙️ Settings button to enter your key, or use the "Launch Search on External Sites" buttons below to search on their websites directly.'], sources: [] };
+    }
+    if ((src === 'all' || src === 'jsearch') && settings.rapidapiKey) {
+      promises.push(fetchJSearch(query, location, page, filters).catch(e => ({ jobs: [], source: 'jsearch', error: e.message })));
+    }
+    if (src === 'all' || src === 'remotive') {
+      promises.push(fetchRemotive(query, location, filters).catch(e => ({ jobs: [], source: 'remotive', error: e.message })));
+    }
+
+    if (promises.length === 0) {
+      return { jobs: [], totalPages: 0, errors: ['No active sources. Please select "All Sources" or "Career Pages" if you do not have a RapidAPI key.'], sources: [] };
+    }
+
+    const results = await Promise.all(promises);
+    let allJobs = [], maxPages = 1, errors = [], sources = new Set();
+
+    results.forEach(r => {
+      allJobs.push(...(r.jobs || []));
+      if (r.totalPages > maxPages) maxPages = r.totalPages;
+      if (r.error) errors.push(r.error);
+      if (r.jobs?.length > 0) sources.add(r.source);
+    });
+
+    allJobs.sort((a, b) => new Date(b.posted || 0) - new Date(a.posted || 0));
+    return { jobs: allJobs, totalPages: maxPages, errors, sources: [...sources] };
+  }
+
+  // ── External Search Redirection ──────────────────────────────────
+  const EXTERNAL_URLS = {
+    linkedin: (q, l) => `https://www.linkedin.com/jobs/search/?keywords=${encodeURIComponent(q)}${l ? `&location=${encodeURIComponent(l)}` : ''}`,
+    instahyre: (q) => `https://www.instahyre.com/search-jobs/?search_term=${encodeURIComponent(q)}`,
+    indeed: (q, l) => `https://www.indeed.com/jobs?q=${encodeURIComponent(q)}${l ? `&l=${encodeURIComponent(l)}` : ''}`,
+    naukri: (q, l) => {
+      const slug = q.trim().replace(/\s+/g, '-').toLowerCase();
+      let url = `https://www.naukri.com/${slug}-jobs`;
+      if (l) url += `-in-${l.trim().replace(/\s+/g, '-').toLowerCase()}`;
+      return url;
+    },
+    wellfound: (q) => `https://wellfound.com/jobs?query=${encodeURIComponent(q)}`,
+    glassdoor: (q, l) => `https://www.glassdoor.com/Job/jobs.htm?sc.keyword=${encodeURIComponent(q)}${l ? `&locKeyword=${encodeURIComponent(l)}` : ''}`,
+  };
+
+  window.searchExternal = function(platformKey) {
+    const q = $('#q').value.trim();
+    const l = $('#loc').value.trim();
+    if (!q) { $('#q').focus(); toast('⚠ Enter a search query first'); return; }
+
+    if (platformKey === 'all') {
+      Object.keys(EXTERNAL_URLS).forEach(key => {
+        window.open(EXTERNAL_URLS[key](q, l), '_blank', 'noopener,noreferrer');
+      });
+      toast('🚀 Opened all platform search pages');
+    } else if (EXTERNAL_URLS[platformKey]) {
+      window.open(EXTERNAL_URLS[platformKey](q, l), '_blank', 'noopener,noreferrer');
+      toast(`🚀 Searching on ${platformKey[0].toUpperCase() + platformKey.slice(1)}`);
+    }
+  };
+
+  // ── Helpers ──────────────────────────────────────────────────────
+  function stripHtml(h) { const d = document.createElement('div'); d.innerHTML = h; return d.textContent || ''; }
+  function fmtType(t) { if (!t) return ''; const m = { FULLTIME:'Full-time', PARTTIME:'Part-time', CONTRACTOR:'Contract', INTERN:'Internship' }; return m[t] || t; }
+  function fmtSalary(min, max, cur) {
+    if (!min && !max) return '';
+    const c = cur || 'USD';
+    const f = n => { try { return new Intl.NumberFormat('en-US',{style:'currency',currency:c,maximumFractionDigits:0}).format(n); } catch { return `${c} ${n}`; } };
+    if (min && max) return `${f(min)} – ${f(max)}`; if (min) return `From ${f(min)}`; return `Up to ${f(max)}`;
+  }
+  function esc(s) { if (!s) return ''; const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+  function timeAgo(ds) {
+    if (!ds) return '';
+    const d = Math.floor((Date.now() - new Date(ds)) / 3600000);
+    if (d < 1) return 'Just now'; if (d < 24) return d+'h ago';
+    const dd = Math.floor(d/24);
+    if (dd === 1) return '1d ago'; if (dd < 7) return dd+'d ago'; if (dd < 30) return Math.floor(dd/7)+'w ago';
+    return new Date(ds).toLocaleDateString('en-IN',{day:'numeric',month:'short'});
+  }
+  function isTracked(url) { return url && trackedJobs.some(j => j.url === url); }
+  function getStatus(url) { const j = trackedJobs.find(t => t.url === url); return j?.status || null; }
+
+  // ── Search Execution ─────────────────────────────────────────────
+  $('#btn-search').addEventListener('click', () => execSearch(1));
+  $('#q').addEventListener('keydown', e => { if (e.key==='Enter') execSearch(1); });
+  $('#loc').addEventListener('keydown', e => { if (e.key==='Enter') execSearch(1); });
+
+  async function execSearch(page) {
+    const query = $('#q').value.trim();
+    if (!query) { $('#q').focus(); toast('⚠ Enter a search query'); return; }
+
+    const location = $('#loc').value.trim();
+    const filters = { datePosted: $('#f-date').value, employmentType: $('#f-type').value, remote: $('#f-remote').value };
+    lastSearch = { query, location, filters };
+    currentPage = page || 1;
+
+    showLoading();
+
+    try {
+      const result = await searchJobs(query, location, currentPage, filters);
+      searchResults = result.jobs;
+      totalPages = result.totalPages;
+
+      if (result.errors.length > 0 && searchResults.length === 0) showError(result.errors[0]);
+      else if (searchResults.length === 0) showEmpty(query);
+      else renderResults(result.sources);
+
+      if (result.errors.length > 0 && searchResults.length > 0) toast('⚠ ' + result.errors[0]);
+    } catch (err) { showError(err.message); }
+  }
+
+  window.changePage = d => { const p = currentPage + d; if (p >= 1 && p <= totalPages) execSearch(p); };
+
+  // ── Render ───────────────────────────────────────────────────────
+  function showLoading() {
+    let h = '<div class="job-listings">';
+    for (let i = 0; i < 4; i++) h += '<div class="skel"><div class="skel-logo"></div><div class="skel-body"><div class="skel-line w6"></div><div class="skel-line w4"></div><div class="skel-line w10"></div><div class="skel-line w8"></div></div></div>';
+    resultsArea.innerHTML = h + '</div>';
+  }
+
+  function showEmpty(q) {
+    resultsArea.innerHTML = `<div class="search-state"><div class="search-state-icon">🤷</div><h3>No jobs found for "${esc(q)}"</h3><p>Try broader keywords or adjust filters. ${!settings.rapidapiKey ? 'Add a RapidAPI key in ⚙️ Settings for LinkedIn/Indeed results.' : ''} Make sure your company list in Settings includes relevant companies.</p></div>`;
+  }
+
+  function showError(msg) {
+    resultsArea.innerHTML = `<div class="search-state"><div class="search-state-icon">⚠️</div><h3>Something went wrong</h3><p>${esc(msg)}</p></div>`;
+  }
+
+  function renderResults(sources) {
+    const srcLabels = { careers: 'Career Pages', jsearch: 'LinkedIn/Indeed/Glassdoor', remotive: 'Remote Jobs' };
+    const srcColors = { careers: '#10b981', jsearch: '#0A66C2', remotive: '#12CBC4', greenhouse: '#10b981', lever: '#8B5CF6' };
+
+    let h = `<div class="results-header"><span class="results-count">${searchResults.length} job${searchResults.length!==1?'s':''} found</span><div class="results-sources">`;
+    (sources || []).forEach(s => { h += `<span class="result-src-tag" style="border-color:${srcColors[s]||'var(--border-color)'};color:${srcColors[s]||'var(--text-muted)'}">${srcLabels[s]||s}</span>`; });
+    h += '</div></div><div class="job-listings">';
+
+    searchResults.forEach(job => {
+      const tracked = isTracked(job.url);
+      const status = getStatus(job.url);
+      const logo = job.logo
+        ? `<img src="${esc(job.logo)}" alt="" onerror="this.parentElement.innerHTML='<span class=jl-logo-fb>${esc(job.company?.slice(0,2))}</span>'">`
+        : `<span class="jl-logo-fb">${esc(job.company?.slice(0,2))}</span>`;
+      const sc = srcColors[job.source] || 'var(--text-muted)';
+      const pubLabel = job.source === 'greenhouse' ? `Greenhouse · ${esc(job.publisher)}` :
+                       job.source === 'lever' ? `Lever · ${esc(job.publisher)}` :
+                       job.source === 'ashby' ? `Ashby · ${esc(job.publisher)}` :
+                       job.source === 'smartrecruiters' ? `SmartRecruiters · ${esc(job.publisher)}` :
+                       esc(job.publisher || job.source);
+
+      h += `<div class="jl${tracked?' saved':''}" data-jid="${esc(job.id)}">
+        <div class="jl-logo">${logo}</div>
+        <div class="jl-body">
+          <div class="jl-title">${esc(job.title)}</div>
+          <div class="jl-company">${esc(job.company)}</div>
+          <div class="jl-details">
+            ${job.location?`<span class="dc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>${esc(job.location)}</span>`:''}
+            ${job.type?`<span class="dc">${esc(job.type)}</span>`:''}
+            ${job.salary?`<span class="dc">${esc(job.salary)}</span>`:''}
+            ${job.remote?'<span class="dc">🌐 Remote</span>':''}
+          </div>
+          ${job.description?`<div class="jl-desc">${esc(job.description)}</div>`:''}
+          <div class="jl-footer">
+            <div class="jl-meta">
+              <span class="jl-src" style="color:${sc};border-color:${sc}">${pubLabel}</span>
+              ${job.posted?`<span class="jl-time">${timeAgo(job.posted)}</span>`:''}
+            </div>
+            <div class="jl-actions">
+              <button class="btn-save${tracked?' saved':''}" onclick="saveJob('${esc(job.id)}')" title="${tracked?'Already saved':'Save to Wishlist'}">
+                <svg viewBox="0 0 24 24" fill="${tracked?'currentColor':'none'}" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z"/></svg>
+                ${tracked?(status?status[0].toUpperCase()+status.slice(1):'Saved'):'Save'}
+              </button>
+              <button class="btn-apply${status==='applied'?' applied':''}" onclick="applyTrack('${esc(job.id)}')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                ${status==='applied'?'Applied ✓':'Apply & Track'}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>`;
+    });
+
+    h += '</div>';
+
+    if (totalPages > 1 || currentPage > 1) {
+      h += `<div class="pagination">
+        <button class="btn-page" onclick="changePage(-1)" ${currentPage<=1?'disabled':''}><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>Prev</button>
+        <span class="page-info">Page ${currentPage}</span>
+        <button class="btn-page" onclick="changePage(1)" ${currentPage>=totalPages?'disabled':''}>Next<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></button>
+      </div>`;
+    }
+
+    resultsArea.innerHTML = h;
+  }
+
+  // ── Save & Apply from Search ─────────────────────────────────────
+  window.saveJob = function(id) {
+    const job = searchResults.find(j => j.id === id);
+    if (!job) return;
+    if (isTracked(job.url)) {
+      toast('ℹ Already in tracker');
+      $$('.tab-btn')[1].click();
+      return;
+    }
+    addToTracker(job, 'wishlist');
+    renderResults(); renderBoard();
+    toast('✓ Saved to Wishlist');
+  };
+
+  window.applyTrack = function(id) {
+    const job = searchResults.find(j => j.id === id);
+    if (!job) return;
+    if (job.url) window.open(job.url, '_blank', 'noopener,noreferrer');
+    const existing = trackedJobs.find(j => j.url === job.url);
+    if (existing) { existing.status = 'applied'; existing.updatedAt = new Date().toISOString(); }
+    else addToTracker(job, 'applied');
+    saveJobs(); renderResults(); renderBoard();
+    toast('✓ Opened + tracked as Applied');
+  };
+
+  function addToTracker(job, status) {
+    trackedJobs.push({
+      id: crypto.randomUUID(), company: job.company, role: job.title,
+      platform: job.publisher || job.source, status, url: job.url,
+      location: job.location, salary: job.salary, notes: '',
+      logo: job.logo, createdAt: new Date().toISOString(), updatedAt: new Date().toISOString(),
+    });
+    saveJobs();
+  }
+
+  // ── Kanban Board ─────────────────────────────────────────────────
+  function renderBoard() {
+    STATUSES.forEach(st => {
+      const con = kanbanBoard.querySelector(`.kc-cards[data-status="${st}"]`);
+      const cnt = kanbanBoard.querySelector(`[data-count="${st}"]`);
+      const sj = trackedJobs.filter(j => j.status === st);
+      cnt.textContent = sj.length; con.innerHTML = '';
+      sj.sort((a,b) => new Date(b.updatedAt) - new Date(a.updatedAt));
+      sj.forEach(job => {
+        const c = document.createElement('div');
+        c.className = 'tc'; c.draggable = true; c.dataset.jobId = job.id;
+        c.innerHTML = `<div class="tc-acts">
+          ${job.url?`<a href="${esc(job.url)}" target="_blank" rel="noopener noreferrer" class="btn-tc" title="Open"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a>`:''}
+          <button class="btn-tc" title="Edit" onclick="editJob('${job.id}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
+          <button class="btn-tc del" title="Delete" onclick="delJob('${job.id}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+        </div>
+        <div class="tc-co">${esc(job.company)}</div>
+        <div class="tc-ro">${esc(job.role)}</div>
+        <div class="tc-mt"><span class="tc-pl">${esc(job.platform)}</span><span class="tc-dt">${timeAgo(job.createdAt)}</span></div>`;
+        c.addEventListener('dragstart', e => { e.dataTransfer.setData('text/plain',job.id); e.dataTransfer.effectAllowed='move'; c.classList.add('dragging'); });
+        c.addEventListener('dragend', () => { c.classList.remove('dragging'); $$('.kanban-col').forEach(x=>x.classList.remove('drag-over')); });
+        con.appendChild(c);
+      });
+    });
+    updateStats();
+  }
+
+  $$('.kc-cards').forEach(col => {
+    col.addEventListener('dragover', e => { e.preventDefault(); e.dataTransfer.dropEffect='move'; col.closest('.kanban-col').classList.add('drag-over'); });
+    col.addEventListener('dragleave', e => { if (!col.contains(e.relatedTarget)) col.closest('.kanban-col').classList.remove('drag-over'); });
+    col.addEventListener('drop', e => {
+      e.preventDefault(); col.closest('.kanban-col').classList.remove('drag-over');
+      const id = e.dataTransfer.getData('text/plain'), ns = col.dataset.status;
+      const j = trackedJobs.find(x => x.id === id);
+      if (j && j.status !== ns) { j.status = ns; j.updatedAt = new Date().toISOString(); saveJobs(); renderBoard(); toast(`✓ Moved to ${ns}`); }
+    });
+  });
+
+  function updateStats() {
+    STATUSES.forEach(s => { $(`#s-${s}`).textContent = trackedJobs.filter(j=>j.status===s).length; });
+    $('#tab-count').textContent = trackedJobs.length;
+  }
+
+  window.editJob = function(id) {
+    const j = trackedJobs.find(x=>x.id===id); if (!j) return;
+    editingJobId = id;
+    $('#ajtitle').textContent = 'Edit Job'; $('#submit-aj').textContent = 'Save Changes';
+    $('#mj-co').value = j.company; $('#mj-ro').value = j.role;
+    $('#mj-pl').value = j.platform; $('#mj-st').value = j.status;
+    $('#mj-url').value = j.url||''; $('#mj-notes').value = j.notes||'';
+    dlgAddJob.showModal();
+  };
+
+  window.delJob = function(id) {
+    trackedJobs = trackedJobs.filter(j=>j.id!==id);
+    saveJobs(); renderBoard(); if (searchResults.length) renderResults();
+    toast('✓ Removed');
+  };
+
+  // ── Manual Add ───────────────────────────────────────────────────
+  $('#btn-add-manual').addEventListener('click', () => {
+    editingJobId = null; $('#ajtitle').textContent = 'Add Job Manually';
+    $('#submit-aj').textContent = 'Add Job'; $('#add-job-form').reset();
+    dlgAddJob.showModal();
+  });
+
+  $('#add-job-form').addEventListener('submit', e => {
+    e.preventDefault();
+    const d = { company:$('#mj-co').value.trim(), role:$('#mj-ro').value.trim(), platform:$('#mj-pl').value, status:$('#mj-st').value, url:$('#mj-url').value.trim(), notes:$('#mj-notes').value.trim() };
+    if (editingJobId) {
+      const i = trackedJobs.findIndex(j=>j.id===editingJobId);
+      if (i!==-1) trackedJobs[i] = { ...trackedJobs[i], ...d, updatedAt:new Date().toISOString() };
+      toast('✓ Updated');
+    } else {
+      trackedJobs.push({ id:crypto.randomUUID(), ...d, logo:null, location:'', salary:'', createdAt:new Date().toISOString(), updatedAt:new Date().toISOString() });
+      toast('✓ Added');
+    }
+    editingJobId = null; saveJobs(); renderBoard();
+    if (searchResults.length) renderResults();
+    dlgAddJob.close();
+  });
+
+  // ── Export ───────────────────────────────────────────────────────
+  $('#btn-export').addEventListener('click', () => {
+    if (!trackedJobs.length) { toast('⚠ Nothing to export'); return; }
+    const hd = ['Company','Role','Platform','Status','URL','Location','Salary','Notes','Added','Updated'];
+    let csv = hd.join(',')+'\n';
+    trackedJobs.forEach(j => { csv += [j.company,j.role,j.platform,j.status,j.url||'',j.location||'',j.salary||'',(j.notes||'').replace(/"/g,'""'),new Date(j.createdAt).toLocaleDateString(),new Date(j.updatedAt).toLocaleDateString()].map(c=>`"${c}"`).join(',')+'\n'; });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
+    a.download = `jobs-${new Date().toISOString().slice(0,10)}.csv`;
+    a.click(); toast('✓ CSV downloaded');
+  });
+
+  // ── Settings ─────────────────────────────────────────────────────
+  $('#btn-settings').addEventListener('click', () => {
+    $('#rapidapi-key').value = settings.rapidapiKey || '';
+    renderCompanyList();
+    updateBadges();
+    dlgSettings.showModal();
+  });
+
+  // ── Clean Old File ──
+  // Make sure to delete the old root level job-search.html after confirming jobs/index.html works
+
+  $('#save-settings').addEventListener('click', () => {
+    settings.rapidapiKey = $('#rapidapi-key').value.trim();
+    saveSettings(); updateBadges();
+    dlgSettings.close();
+    toast('✓ Settings saved');
+  });
+
+  $('#btn-test-key').addEventListener('click', async () => {
+    const key = $('#rapidapi-key').value.trim();
+    if (!key) { toast('⚠ Enter a key to test'); return; }
+    
+    const statusEl = $('#test-key-status');
+    statusEl.innerHTML = '<span style="color:var(--text-muted)">Testing connection...</span>';
+    
+    try {
+      const res = await fetch(`https://jsearch.p.rapidapi.com/search-v2?query=designer&page=1&num_pages=1`, {
+        headers: { 'X-RapidAPI-Key': key, 'X-RapidAPI-Host': 'jsearch.p.rapidapi.com' }
+      });
+      
+      if (res.ok) {
+        statusEl.innerHTML = '<span style="color:var(--col-offer)">✓ Connection successful! Your key is valid.</span>';
+      } else {
+        const errData = await res.json().catch(() => ({}));
+        const errMsg = errData.message || `HTTP error ${res.status}`;
+        statusEl.innerHTML = `<span style="color:var(--col-rejected)">✗ Failed: ${errMsg} (Status code: ${res.status})</span>`;
+      }
+    } catch (err) {
+      statusEl.innerHTML = `<span style="color:var(--col-rejected)">✗ Network Error: ${err.message}</span>`;
+    }
+  });
+
+  function updateBadges() {
+    const b = $('#jsearch-badge');
+    if (settings.rapidapiKey) { b.className = 'api-badge ok'; b.innerHTML = '<span class="dot"></span>Connected'; }
+    else { b.className = 'api-badge off'; b.innerHTML = '<span class="dot"></span>Not configured'; }
+  }
+
+  // ── Company list in settings ─────────────────────────────────────
+  function renderCompanyList() {
+    const el = $('#company-list');
+    el.innerHTML = settings.companies.map((c, i) =>
+      `<span class="company-tag">${esc(c.name || c.slug)} <span style="opacity:0.4;font-size:0.5rem;margin:0 0.125rem">${c.ats}</span><button onclick="removeCo(${i})" title="Remove">×</button></span>`
+    ).join('');
+  }
+
+  window.removeCo = function(i) {
+    settings.companies.splice(i, 1);
+    saveSettings(); renderCompanyList();
+  };
+
+  $('#btn-add-co').addEventListener('click', () => {
+    const slug = $('#new-company-slug').value.trim().toLowerCase().replace(/\s+/g, '-');
+    const ats = $('#new-company-ats').value;
+    if (!slug) return;
+    if (settings.companies.some(c => c.slug === slug && c.ats === ats)) { toast('⚠ Already in list'); return; }
+    settings.companies.push({ slug, ats, name: slug.charAt(0).toUpperCase() + slug.slice(1) });
+    saveSettings(); renderCompanyList();
+    $('#new-company-slug').value = '';
+    toast(`✓ Added ${slug}`);
+  });
+
+  // ── Init ─────────────────────────────────────────────────────────
+  load();
+  renderBoard();
+  </script>
+</body>
+</html>
