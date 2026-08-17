@@ -22,6 +22,7 @@
   /* Layout */
   --max-width: 1100px;
   --header-height: 56px;
+  --radius: 4px;
   --transition-smooth: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -164,6 +165,7 @@ img {
   font-weight: 500;
   padding: 0.375rem 1rem;
   border: 1px solid var(--border-color);
+  border-radius: var(--radius);
   color: var(--text-primary);
   letter-spacing: 0.02em;
   transition: all 0.2s ease;
@@ -318,6 +320,7 @@ img {
   font-weight: 500;
   letter-spacing: 0.02em;
   border: none;
+  border-radius: var(--radius);
   cursor: pointer;
   transition: opacity 0.2s ease;
 }
@@ -405,6 +408,7 @@ img {
 .project-card {
   background: var(--bg-card);
   border: 1px solid var(--border-color);
+  border-radius: var(--radius);
   overflow: hidden;
   cursor: pointer;
   transition: border-color 0.3s ease;
@@ -473,6 +477,7 @@ img {
   font-size: 0.67rem;
   padding: 0.25rem 0.625rem;
   border: 1px solid var(--border-color);
+  border-radius: var(--radius);
   color: var(--text-muted);
   text-transform: uppercase;
   letter-spacing: 0.15em;
@@ -654,6 +659,7 @@ img {
   background: rgba(200, 200, 196, 0.1);
   color: var(--text-secondary);
   border: 1px solid rgba(200, 200, 196, 0.2);
+  border-radius: var(--radius);
   text-transform: uppercase;
   letter-spacing: 0.15em;
 }
@@ -691,6 +697,7 @@ img {
   color: var(--text-muted);
   background: #252525;
   padding: 0.125rem 0.5rem;
+  border-radius: var(--radius);
 }
 
 .timeline-bullets {
@@ -747,6 +754,7 @@ img {
   gap: 0.75rem;
   align-items: flex-start;
   border: 1px solid var(--border-color);
+  border-radius: var(--radius);
   padding: 0.75rem 1rem;
 }
 
@@ -769,6 +777,7 @@ img {
 
 .education-card {
   border: 1px solid var(--border-color);
+  border-radius: var(--radius);
   padding: 1.25rem;
 }
 
@@ -918,6 +927,7 @@ img {
   width: 100%;
   background: var(--bg-secondary);
   border: 1px solid var(--border-color);
+  border-radius: var(--radius);
   padding: 0.75rem 1rem;
   font-size: 0.875rem;
   font-family: var(--font-sans);
@@ -946,6 +956,7 @@ img {
   gap: 0.5rem;
   background: var(--text-primary);
   color: var(--bg-primary);
+  border-radius: var(--radius);
   padding: 0.75rem 1.5rem;
   font-size: 0.875rem;
   font-family: var(--font-sans);
@@ -1008,7 +1019,7 @@ img {
 
 .main-footer {
   border-top: 1px solid var(--border-color);
-  background: var(--bg-primary);
+  background: var(--bg-secondary);
 }
 
 .footer-container {
@@ -1424,4 +1435,452 @@ img.company-logo {
     padding: 1.5rem;
   }
 }
+
+/* ==========================================================================
+   TESTIMONIALS SECTION (HORIZONTAL AUTO-SCROLL CAROUSEL)
+   ========================================================================== */
+
+.testimonials-section {
+  padding: 6rem 0;
+  background-color: var(--bg-primary);
+  border-top: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.testimonials-header {
+  margin-bottom: 2.5rem;
+  max-width: 700px;
+  text-align: left;
+}
+
+/* Carousel Outer Wrapper — full width viewport with dots below */
+.testimonials-carousel-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  width: 100%;
+}
+
+/* Nav Buttons — static flex children, not absolute */
+.carousel-nav-btn {
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  transition: all 0.25s ease;
+}
+
+.carousel-nav-btn:hover {
+  background: var(--text-primary);
+  color: var(--bg-primary);
+  border-color: var(--text-primary);
+  transform: scale(1.08);
+}
+
+.carousel-nav-btn svg {
+  width: 20px;
+  height: 20px;
+  pointer-events: none;
+}
+
+/* Viewport — takes remaining space */
+.testimonials-carousel-viewport {
+  flex: 1;
+  min-width: 0;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  padding: 1rem 0;
+}
+
+.testimonials-carousel-viewport::-webkit-scrollbar {
+  display: none;
+}
+
+/* Carousel Track */
+.testimonials-track {
+  display: flex;
+  gap: 1.5rem;
+}
+
+/* Testimonial Card */
+.testimonial-card {
+  flex: 0 0 calc((100% - 1rem) / 1.15);
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius);
+  padding: 1.5rem 1.35rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+  justify-content: space-between;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+  box-sizing: border-box;
+}
+
+@media (min-width: 768px) {
+  .testimonial-card {
+    flex: 0 0 calc((100% - 1.5rem) / 1.8);
+  }
+}
+
+@media (min-width: 992px) {
+  .testimonial-card {
+    flex: 0 0 calc((100% - 2.5rem) / 2.15);
+  }
+}
+
+.testimonial-card:hover {
+  border-color: rgba(240, 240, 238, 0.25);
+  transform: translateY(-3px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
+}
+
+.testimonial-quote-icon {
+  width: 44px;
+  height: 44px;
+  color: rgba(240, 240, 238, 0.12);
+  margin-bottom: 0.75rem;
+  user-select: none;
+  flex-shrink: 0;
+  display: block;
+}
+
+/* Text — NO line-clamp. JS handles truncation. */
+.testimonial-text {
+  font-size: 0.875rem;
+  line-height: 1.6;
+  color: var(--text-secondary);
+  text-align: left;
+  font-weight: 400;
+  margin-bottom: 1.25rem;
+}
+
+/* Inline "Read more" / "Read less" span inside the <p> */
+.testimonial-read-toggle {
+  color: var(--text-muted);
+  cursor: pointer;
+  font-weight: 500;
+  white-space: nowrap;
+  text-decoration: underline;
+  transition: color 0.2s ease;
+}
+
+.testimonial-read-toggle:hover {
+  color: var(--text-primary);
+  text-decoration: underline;
+}
+
+/* Footer: Horizontal Avatar + Name/Role */
+.testimonial-footer {
+  margin-top: auto;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  border-top: 1px solid var(--border-color);
+  padding-top: 1rem;
+}
+
+.author-avatar-wrapper {
+  flex-shrink: 0;
+}
+
+.author-avatar-img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 0.875rem;
+  color: #ffffff;
+  object-fit: cover;
+  border: 1px solid rgba(240, 240, 238, 0.15);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.author-avatar-photo {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid rgba(240, 240, 238, 0.15);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.author-details {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+  gap: 0.1rem;
+}
+
+.author-name {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  letter-spacing: 0.01em;
+}
+
+.author-name-link {
+  color: var(--text-primary);
+  text-decoration: none;
+  position: relative;
+  display: inline-block;
+}
+
+.author-name-link::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 1px;
+  width: 100%;
+  height: 1px;
+  background-color: var(--text-primary);
+  transform: scaleX(0);
+  transform-origin: bottom left;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.author-name-link:hover {
+  color: var(--text-primary);
+}
+
+.author-name-link:hover::after {
+  transform: scaleX(1);
+}
+
+.author-title {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  line-height: 1.3;
+}
+
+.linkedin-verified-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  margin-top: 0.1rem;
+  font-weight: 400;
+  transition: color 0.2s ease;
+}
+
+.linkedin-verified-badge:hover {
+  color: var(--text-primary);
+}
+
+.linkedin-icon {
+  width: 11px;
+  height: 11px;
+}
+
+
+
+
+/* Bottom Controls Toolbar (Prev + Dots + Next) */
+.testimonials-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.25rem;
+  margin-top: 1.5rem;
+  width: 100%;
+}
+
+/* Dots / Line Indicator with Timing Fill */
+.testimonials-dots {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0;
+  width: auto;
+}
+
+/* Inactive: small circle dot */
+.testimonials-dots .dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(240, 240, 238, 0.2);
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  border: none;
+  padding: 0;
+  transition: all 0.35s ease;
+}
+
+.testimonials-dots .dot:hover {
+  background: rgba(240, 240, 238, 0.45);
+}
+
+/* Active: elongated line with timer fill */
+.testimonials-dots .dot.active {
+  width: 36px;
+  height: 5px;
+  border-radius: 3px;
+  background: rgba(240, 240, 238, 0.12);
+}
+
+.testimonials-dots .dot-progress {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 0%;
+  background: var(--text-muted);
+  border-radius: 3px;
+  pointer-events: none;
+}
+
+@keyframes dotProgressFill {
+  0% { width: 0%; }
+  100% { width: 100%; }
+}
+
+.testimonials-dots .dot.active .dot-progress {
+  animation: dotProgressFill 4s linear forwards;
+}
+
+.testimonials-carousel-wrapper.paused .testimonials-dots .dot.active .dot-progress {
+  animation-play-state: paused;
+}
+
+/* ==========================================================================
+   TESTIMONIAL MODAL DIALOG
+   ========================================================================== */
+
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.78);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.modal-backdrop.open {
+  opacity: 1;
+  visibility: visible;
+}
+
+.modal-card {
+  background: var(--bg-card);
+  border: 1px solid rgba(240, 240, 238, 0.15);
+  border-radius: var(--radius);
+  max-width: 640px;
+  width: 100%;
+  max-height: 85vh;
+  overflow-y: auto;
+  position: relative;
+  padding: 2.25rem 2rem 2rem;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+  transform: scale(0.95) translateY(15px);
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  box-sizing: border-box;
+}
+
+.modal-backdrop.open .modal-card {
+  transform: scale(1) translateY(0);
+}
+
+.modal-close-btn {
+  position: absolute;
+  top: 1.25rem;
+  right: 1.25rem;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(240, 240, 238, 0.08);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.modal-close-btn:hover {
+  background: var(--text-primary);
+  color: var(--bg-primary);
+  transform: scale(1.05);
+}
+
+.modal-close-btn svg {
+  width: 18px;
+  height: 18px;
+}
+
+.modal-quote-icon {
+  width: 48px;
+  height: 48px;
+  color: rgba(240, 240, 238, 0.12);
+  margin-bottom: 1rem;
+}
+
+.modal-body {
+  margin-bottom: 1.75rem;
+}
+
+.modal-text {
+  font-size: 0.95rem;
+  line-height: 1.7;
+  color: var(--text-primary);
+  white-space: pre-line;
+}
+
+.modal-footer {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  border-top: 1px solid var(--border-color);
+  padding-top: 1.25rem;
+}
+
+@media (max-width: 768px) {
+  .modal-backdrop {
+    padding: 1rem;
+  }
+  .modal-card {
+    padding: 1.75rem 1.25rem 1.5rem;
+    border-radius: var(--radius);
+    max-height: 88vh;
+  }
+  .modal-text {
+    font-size: 0.9rem;
+    line-height: 1.65;
+  }
+}
+
+
+
 
