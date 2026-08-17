@@ -562,6 +562,7 @@ img {
   align-items: center;
   gap: 0.5rem;
   border: 1px solid var(--border-color);
+  border-radius: var(--radius);
   color: var(--text-primary);
   padding: 0.625rem 1.25rem;
   font-size: 0.875rem;
