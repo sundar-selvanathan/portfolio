@@ -1567,6 +1567,7 @@ img.company-logo {
   text-align: left;
   font-weight: 400;
   margin-bottom: 1.25rem;
+  white-space: pre-line;
 }
 
 /* Inline "Read more" / "Read less" span inside the <p> */
