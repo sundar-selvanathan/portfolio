@@ -102,13 +102,14 @@ img {
   height: var(--header-height);
   transition: background-color 0.4s ease, border-color 0.4s ease;
   background: transparent;
+  border-bottom: 1px solid rgba(240, 240, 238, 0);
 }
 
 #main-header.scrolled {
   background: rgba(17, 17, 17, 0.96);
   backdrop-filter: blur(4px);
   -webkit-backdrop-filter: blur(4px);
-  border-bottom: 1px solid var(--border-color);
+  border-bottom-color: var(--border-color);
 }
 
 .nav-container {
