@@ -6,7 +6,7 @@
   <title>Claro PDF Exporter | Sundar Raj S</title>
   <meta name="description" content="Claro PDF Exporter - An accessible, structured, and 100% free Figma Community plugin by Sundar Raj S.">
   
-  <link rel="stylesheet" href="../../style.css?v=4.2.0">
+  <link rel="stylesheet" href="../../style.css?v=5.5.0">
   <link rel="icon" type="image/png" href="../../assets/images/favicon.png">
   
   <!-- Microsoft Clarity -->
@@ -44,7 +44,7 @@
     </nav>
   </header>
 
-  <main>
+  <main class="claro-page">
     <section class="case-study-page-section">
       <div class="container">
         
@@ -59,42 +59,16 @@
 
         <!-- Hero Section -->
         <div class="case-study-hero">
-          <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem;">
-            <img src="../../assets/images/playground/icon_128x128.png" alt="Claro Plugin Icon" style="width: 56px; height: 56px; border-radius: 12px; border: 1px solid var(--border-color); background: #1e1e1e; flex-shrink: 0;">
-            <div>
-              <div class="plugin-status-badge" style="margin-bottom: 0.25rem;">
-                <span class="pulse-dot"></span>
-                <span>Live on Figma Community</span>
-              </div>
-              <span class="pill-free">✦ 100% Free & Unlimited</span>
-            </div>
+          <!-- Hero Banner Image (Placed above title) -->
+          <div class="case-study-full-image claro-hero-image">
+            <img src="../../assets/images/playground/thumbnail_1920x1080.jpg" alt="Claro PDF Exporter cover banner" class="reveal">
           </div>
 
           <h1 class="case-study-title">Claro PDF Exporter: Making Figma exports accessible, structured, and completely free</h1>
-          <p class="case-study-subtitle">Standard Figma PDF exports flatten designs into unreadable vector paths and images with zero document hierarchy—causing screen readers to fail, accessibility audits to flag errors, and ATS scanners to reject resumes. I engineered and published Claro to solve this directly inside Figma.</p>
-          
-          <!-- Metadata Grid -->
-          <div class="case-study-meta-grid">
-            <div class="meta-item">
-              <span class="meta-label">Product / Platform</span>
-              <span class="meta-value">Figma Community Plugin<br>Web & Desktop App</span>
-            </div>
-            <div class="meta-item">
-              <span class="meta-label">My Role</span>
-              <span class="meta-value">Product Strategy, UX Design,<br>TypeScript & Manifest V3 Code</span>
-            </div>
-            <div class="meta-item">
-              <span class="meta-label">Core Capabilities</span>
-              <span class="meta-value">Semantic Hierarchy (H1–H6),<br>WCAG 2.1 Contrast & Alt-Text</span>
-            </div>
-            <div class="meta-item">
-              <span class="meta-label">Pricing Model</span>
-              <span class="meta-value">100% Free Forever<br>No Paywalls or Export Caps</span>
-            </div>
-          </div>
+          <p class="case-study-subtitle">Standard Figma PDF exports flatten designs into unreadable paths and images with zero document hierarchy. Screen readers struggle, audits flag compliance errors, and ATS scanners drop resumes. I built Claro to solve this directly inside Figma.</p>
 
           <!-- Direct Install CTA Button -->
-          <div style="margin-top: 2.25rem; display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
+          <div class="plugin-cta-row">
             <a href="https://www.figma.com/community/plugin/1677246031292119817" target="_blank" rel="noopener noreferrer" class="btn-figma-install">
               <span>Install on Figma Community</span>
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
@@ -103,154 +77,122 @@
                 <line x1="10" y1="14" x2="21" y2="3"></line>
               </svg>
             </a>
-            <span style="font-size: 0.8rem; color: var(--text-muted);">Compatible with Figma Desktop & Web</span>
           </div>
         </div>
 
-        <!-- Case Study Content -->
+        <!-- Separation rule between header/CTA and article content -->
+        <hr class="article-divider">
+
+        <!-- Article Content -->
         <div class="case-study-content">
-          
-          <!-- Hero Banner Display -->
-          <div class="case-study-full-image" style="margin-top: 0; margin-bottom: 5rem;">
-            <img src="../../assets/images/playground/thumbnail_1920x1080.jpg" alt="Claro PDF Exporter cover banner" class="reveal">
-          </div>
 
           <!-- Section 1: The Problem -->
           <div class="case-study-section reveal">
             <h2 class="case-study-section-title">The Problem with Standard Figma Exports</h2>
             <p>
-              When designers export frames from Figma as PDFs—whether for client presentations, whitepapers, design specs, or professional resumes—Figma flattens all text into unreadable vector paths and raster bitmaps. 
+              If you have ever exported a slide deck, a client brief, or a resume from Figma as a PDF, the visual output looks great on screen. Every font, layout, and image sits right where you placed it.
             </p>
             <p>
-              To human eyes, the visual presentation looks fine. But under the hood, there is <strong>zero semantic hierarchy</strong>. Screen readers (VoiceOver, NVDA, JAWS) read the content as an empty visual canvas or in disjointed spatial fragments. Automated enterprise accessibility compliance audits fail immediately. Furthermore, recruiter Applicant Tracking Systems (ATS) reject resumes exported from Figma because text layers cannot be parsed programmatically.
+              The real problem starts when anyone tries to parse that PDF programmatically. Under the hood, Figma flattens text layers into <strong>unreadable vector paths and raster images</strong>. There is no underlying structure, no headings, and no paragraphs.
+            </p>
+            <p>
+              That leads to real-world issues. <strong>Screen readers</strong> like VoiceOver, NVDA, and JAWS see an empty canvas or read disconnected fragments in random order. Corporate <strong>accessibility audits</strong> fail right away because there are no tagged elements. And for designers crafting resumes in Figma, recruiter <strong>Applicant Tracking Systems (ATS)</strong> often reject applications simply because their scanners cannot detect readable text.
+            </p>
+            <p>
+              It looks complete to our eyes, but underneath, the document is broken.
             </p>
           </div>
 
-          <!-- Section 2: Under the Hood - Features Breakdown -->
+          <div class="case-study-full-image reveal">
+            <img src="../../assets/images/playground/claro_hero_peek.jpg" alt="Comparison showing Figma's flattened PDF output versus structured document hierarchy">
+          </div>
+
+          <!-- Section 2: How Claro Solves It -->
           <div class="case-study-section reveal">
-            <h2 class="case-study-section-title">Under the Hood: How Claro Solves It</h2>
+            <h2 class="case-study-section-title">How Claro Solves It</h2>
             <p>
-              I designed and built Claro to inject true semantic intelligence into Figma’s export pipeline. Here is the architectural breakdown of the plugin’s core features:
+              I built Claro to give Figma exports real semantic structure. Instead of accepting flattened vectors as the only output, the plugin inspects the design directly on the canvas, analyzes how text and content relate to each other, and rebuilds a clean, accessible, tagged PDF from scratch.
+            </p>
+            <p>
+              Here is a look at the three core features that make that happen.
             </p>
           </div>
 
-          <!-- 3 Feature Detail Cards -->
-          <div class="playground-cards-grid reveal-stagger" style="margin-bottom: 4rem;">
+          <!-- Feature 1: Semantic Hierarchy -->
+          <div class="case-study-section reveal">
+            <h2 class="case-study-section-title">Automatic Semantic Hierarchy</h2>
+            <p>
+              Every accessible document needs clear organization. Claro evaluates each text element in your frame, looking at <strong>font sizes, line heights, font weights, and layout positions</strong> to classify content into natural headings (H1 through H6), body copy, and active hyperlinks.
+            </p>
+            <p>
+              It organizes elements in <strong>natural human reading order</strong>, rather than relying on Figma's internal layer stack, which can be backwards or disordered. Screen readers get a predictable document outline to navigate, and links stay interactive.
+            </p>
+            <p>
+              You do not have to tag everything by hand either. Claro reads the typographic decisions you already made in your design and turns them into a proper document tree automatically.
+            </p>
+          </div>
+
+          <div class="case-study-full-image reveal">
+            <img src="../../assets/images/playground/carousel_1_structure.jpg" alt="Claro's automatic semantic document structure engine showing heading classification">
+          </div>
+
+          <!-- Feature 2: Contrast Auditing -->
+          <div class="case-study-section reveal">
+            <h2 class="case-study-section-title">Built-in WCAG 2.1 Contrast Auditing</h2>
+            <p>
+              Accessibility issues are easiest to resolve when you catch them early - before handoff and before a compliance review sends designs back for rework. Claro runs <strong>real-time luminance checks</strong> on every text layer against its container background, displaying clear AAA, AA, or Fail contrast badges right in the plugin panel.
+            </p>
+            <p>
+              This lets you verify contrast compliance while you work in Figma, rather than discovering readability flaws after the file has already been exported and shared.
+            </p>
+          </div>
+
+          <div class="case-study-full-image reveal">
+            <img src="../../assets/images/playground/carousel_2_accessibility.jpg" alt="Claro's WCAG 2.1 color contrast auditing interface showing AAA, AA, and Fail badges">
+          </div>
+
+          <!-- Feature 3: Tagged PDF & Alt-Text -->
+          <div class="case-study-section reveal">
+            <h2 class="case-study-section-title">Tagged PDF &amp; Alt-Text Metadata</h2>
+            <p>
+              Visual elements like photos, icons, and graphics need context for people using assistive tech. Claro allows you to <strong>attach persistent alt-text descriptions</strong> to images and artwork directly inside Figma.
+            </p>
+            <p>
+              When exported, Claro outputs a fully tagged PDF where headings retain their level, paragraphs remain readable text, and images include their alt-text labels. Assistive tech reads the file smoothly, and ATS scanners can index resume text without missing details.
+            </p>
+          </div>
+
+          <div class="case-study-full-image reveal">
+            <img src="../../assets/images/playground/carousel_3_export.jpg" alt="Claro's tagged PDF export with alt-text metadata for screen reader and ATS compatibility">
+          </div>
+
+          <!-- Philosophy: Why It's Free -->
+          <div class="case-study-section reveal">
+            <h2 class="case-study-section-title">Why Claro is Free</h2>
+            <p>
+              Many PDF plugins on the Figma Community offer a handful of free exports before locking features behind a subscription of $8 to $15 every month.
+            </p>
+            <p>
+              I believe <strong>accessibility should be a standard baseline, not an expensive luxury</strong>. Claro is completely free with unlimited exports. There are no paywalls, no mandatory sign-ups, and no telemetry tracking. You can install it and use it whenever you need.
+            </p>
             
-            <!-- Feature 1 -->
-            <div class="feature-detail-card reveal" style="--stagger-index: 0;">
-              <div class="feature-card-media">
-                <img src="../../assets/images/playground/carousel_1_structure.jpg" alt="Automatic Semantic Document Structure">
-              </div>
-              <div class="feature-card-body">
-                <span class="feature-card-step">01 / Document Structure</span>
-                <h3>Automatic Semantic Hierarchy Engine</h3>
-                <p>
-                  Claro inspects typographic scale, line-height ratios, font weights, and nested frame boundaries to automatically classify content into structured headings (H1–H6), body paragraphs, and hyperlinked text (&lt;a&gt;) in natural human reading order.
-                </p>
-                <div class="project-tags">
-                  <span class="badge">DOM Classification</span>
-                  <span class="badge">Natural Reading Order</span>
-                  <span class="badge">Semantic H1–H6</span>
-                </div>
-              </div>
-            </div>
-
-            <!-- Feature 2 -->
-            <div class="feature-detail-card reveal" style="--stagger-index: 1;">
-              <div class="feature-card-media">
-                <img src="../../assets/images/playground/carousel_2_accessibility.jpg" alt="WCAG 2.1 Color Contrast Auditing">
-              </div>
-              <div class="feature-card-body">
-                <span class="feature-card-step">02 / Contrast & Compliance</span>
-                <h3>Built-in WCAG 2.1 Contrast Auditing</h3>
-                <p>
-                  Catch accessibility defects before handoff. Claro performs real-time luminance calculations of text against frame background fills, rendering instant AAA, AA, or Fail contrast badges directly inside the plugin UI.
-                </p>
-                <div class="project-tags">
-                  <span class="badge">WCAG 2.1 AA/AAA</span>
-                  <span class="badge">Luminance Engine</span>
-                  <span class="badge">Pre-Export Audit</span>
-                </div>
-              </div>
-            </div>
-
-            <!-- Feature 3 -->
-            <div class="feature-detail-card reveal" style="--stagger-index: 2;">
-              <div class="feature-card-media">
-                <img src="../../assets/images/playground/carousel_3_export.jpg" alt="Screen Reader Friendly & ATS-Compliant PDF Export">
-              </div>
-              <div class="feature-card-body">
-                <span class="feature-card-step">03 / Assistive Tech & ATS</span>
-                <h3>Tagged PDF & Alt-Text Metadata</h3>
-                <p>
-                  Assign persistent alt-text descriptions to photos, icons, and vector illustrations. Claro generates tagged PDFs that assistive devices and recruiter ATS scanners parse flawlessly with zero missing data.
-                </p>
-                <div class="project-tags">
-                  <span class="badge">Alt-Text Metadata</span>
-                  <span class="badge">Screen Readers</span>
-                  <span class="badge">ATS-Friendly</span>
-                </div>
-              </div>
-            </div>
-
-            <!-- Feature 4: Philosophy -->
-            <div class="pricing-story-card reveal" style="--stagger-index: 3;">
-              <div>
-                <span class="feature-card-step">04 / Community Philosophy</span>
-                <h3 style="font-family: var(--font-serif); font-size: 1.25rem; font-weight: 400; color: var(--text-primary); margin-bottom: 0.65rem;">
-                  100% Free & Unlimited — No Paywalls
-                </h3>
-                <p style="font-size: 0.875rem; color: var(--text-muted); line-height: 1.7;">
-                  Most PDF plugins on the Figma Community bait designers with 3–5 free exports before locking everything behind an expensive monthly subscription. As a design lead who believes accessibility should be a universal baseline—not an expensive luxury—I made Claro completely unmetered and free for everyone.
-                </p>
-
-                <div class="pricing-comparison-list">
-                  <div class="comparison-item">
-                    <span class="comparison-cross">✕</span>
-                    <span style="color: var(--text-muted);">Other plugins: Hard paywalls after 3 to 5 exports</span>
-                  </div>
-                  <div class="comparison-item">
-                    <span class="comparison-cross">✕</span>
-                    <span style="color: var(--text-muted);">Other plugins: $8 – $15 / month subscriptions</span>
-                  </div>
-                  <div class="comparison-item">
-                    <span class="comparison-check">✓</span>
-                    <span style="color: var(--text-primary); font-weight: 500;">Claro: 100% free with unlimited exports forever</span>
-                  </div>
-                  <div class="comparison-item">
-                    <span class="comparison-check">✓</span>
-                    <span style="color: var(--text-primary); font-weight: 500;">Claro: No sign-ups, accounts, or telemetry required</span>
-                  </div>
-                </div>
-              </div>
-
-              <div class="project-tags" style="margin-top: 1rem;">
-                <span class="badge">Zero Paywalls</span>
-                <span class="badge">Unlimited Usage</span>
-                <span class="badge">Community Utility</span>
-              </div>
-            </div>
-
+            <blockquote class="case-study-quote">
+              "Accessibility should be a universal baseline, not an expensive luxury."
+            </blockquote>
           </div>
 
-          <!-- Section 4: Try in Figma Community -->
-          <div class="case-study-section reveal" style="text-align: center; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius); padding: 3rem 2rem; margin-top: 3rem;">
-            <span class="section-subtitle" style="margin-bottom: 0.5rem; display: inline-block;">Available Now</span>
-            <h2 style="font-family: var(--font-serif); font-size: 2rem; font-weight: 400; color: var(--text-primary); margin-bottom: 1rem;">
-              Ready to export accessible PDFs from Figma?
-            </h2>
-            <p style="color: var(--text-muted); max-width: 520px; margin: 0 auto 2rem auto; font-size: 0.95rem; line-height: 1.7;">
-              Install Claro directly from the Figma Community and start generating screen-reader friendly, structured PDFs with zero export caps.
+          <!-- Reflection -->
+          <div class="case-study-section reveal">
+            <h2 class="case-study-section-title">Reflection</h2>
+            <p>
+              Building Claro gave me the chance to connect product design with technical execution - turning an everyday frustration into a tool that helps other designers create more inclusive work.
             </p>
-            <a href="https://www.figma.com/community/plugin/1677246031292119817" target="_blank" rel="noopener noreferrer" class="btn-figma-install" style="display: inline-flex; font-size: 0.95rem; padding: 0.75rem 1.5rem;">
-              <span>Try Claro on Figma Community</span>
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
-                <polyline points="15 3 21 3 21 9"></polyline>
-                <line x1="10" y1="14" x2="21" y2="3"></line>
-              </svg>
-            </a>
+            <p>
+              Writing the TypeScript logic to parse Figma's canvas nodes and generate accessible PDFs was a great deep dive into document standards, ATS parsing, and assistive tools.
+            </p>
+            <p>
+              Claro is live and free on the <a href="https://www.figma.com/community/plugin/1677246031292119817" target="_blank" rel="noopener noreferrer" class="article-inline-link">Figma Community &rarr;</a>
+            </p>
           </div>
 
         </div>
@@ -281,6 +223,6 @@
     </div>
   </footer>
 
-  <script src="../../script.js?v=4.2.0"></script>
+  <script src="../../script.js?v=5.0.0"></script>
 </body>
 </html>
